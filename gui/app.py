@@ -162,10 +162,24 @@ class App(ctk.CTk):
                         "Dostępna aktualizacja!",
                         f"Wykryto nową wersję aplikacji: {version} (aktualna wersja: {update_manager.VERSION}).\n\n"
                         f"Co nowego:\n{changelog}\n\n"
-                        "Czy chcesz otworzyć stronę pobierania nowej wersji?"
+                        "Czy chcesz automatycznie zainstalować tę aktualizację teraz?"
                     ):
-                        if url:
-                            webbrowser.open(url)
+                        messagebox.showinfo(
+                            "Instalowanie aktualizacji",
+                            "Aktualizacja jest pobierana i instalowana w tle. Program wyłączy się automatycznie po zakończeniu pobierania."
+                        )
+                        
+                        def download_and_restart():
+                            success = update_manager.download_and_install_update(url)
+                            if success:
+                                self.after(0, self.destroy)
+                            else:
+                                self.after(0, lambda: messagebox.showerror(
+                                    "Błąd aktualizacji",
+                                    "Wystąpił błąd podczas pobierania lub instalowania aktualizacji."
+                                ))
+                        
+                        threading.Thread(target=download_and_restart, daemon=True).start()
                 
                 if self.winfo_exists():
                     self.after(0, show_popup)
