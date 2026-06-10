@@ -100,6 +100,18 @@ def pobierz_rdzen(slowo: str) -> str:
     return slowo
 
 
+import datetime
+
+def _log_review_classification(message: str):
+    try:
+        os.makedirs("logs", exist_ok=True)
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
+        with open("logs/review.log", "a", encoding="utf-8") as f:
+            f.write(f"{timestamp} {message}\n")
+    except Exception:
+        pass
+
+
 def przypisz_kategorie(tekst, location_id=None, config=None):
     # Backward compatibility with tests/calls that pass config as the second parameter
     if isinstance(location_id, dict) and config is None:
@@ -152,18 +164,22 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
 
                 # 1. Krok: Dopasowanie rdzeniowe / podciągu (bardzo precyzyjne)
                 dopasowanie_rdzen = False
+                matching_word = ""
                 for w_norm, w_rdzen in zip(slowa_norm, slowa_rdzenie):
                     # Jeśli rdzeń imienia/nazwiska pasuje do rdzenia słowa w opinii
                     if czlon_rdzen == w_rdzen or w_norm.startswith(czlon_rdzen):
                         dopasowanie_rdzen = True
+                        matching_word = w_norm
                         break
                 
                 if dopasowanie_rdzen:
+                    _log_review_classification(f"[Klasyfikacja] Dopasowano pracownika '{pracownik}' przez słowo '{matching_word}' w opinii (metoda: rdzeń '{czlon_rdzen}')")
                     return pracownik
 
                 # 2. Krok: Fuzzy fallback
                 matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=0.68)
                 if matches:
+                    _log_review_classification(f"[Klasyfikacja] Dopasowano pracownika '{pracownik}' przez słowo '{matches[0]}' w opinii (metoda: fuzzy '{czlon_norm}' -> '{matches[0]}')")
                     return pracownik
 
     # PRIORYTET 2 (Działy - czysta lista)

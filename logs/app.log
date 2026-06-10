@@ -9595,3 +9595,1568 @@ requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://mybu
 2026-06-10 12:04:47,112 [WARNING] config_manager: Brak klucza 'PRACOWNICY' w konfiguracji — uzupełniam wartością domyślną.
 2026-06-10 12:04:47,112 [WARNING] config_manager: Brak klucza 'DZIALY' w konfiguracji — uzupełniam wartością domyślną.
 2026-06-10 12:04:47,112 [INFO] config_manager: Migracja: klucz 'API_KEY' (Places API) jest przestarzały — używam teraz OAuth2 GBP.
+2026-06-10 12:28:23,899 [INFO] auth_manager: Wczytano token OAuth2 z: data/token.json
+2026-06-10 12:28:24,221 [INFO] auth_manager: Token OAuth2 odświeżony automatycznie.
+2026-06-10 12:28:24,221 [INFO] auth_manager: Token zapisany do: data/token.json
+2026-06-10 12:28:24,559 [INFO] auth_manager: Token zapisany do: data/token.json
+2026-06-10 12:28:24,663 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_3 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:24,663 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:24,663 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 3 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:25,115 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_4 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:25,115 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:25,115 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 4 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:25,555 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_5 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:25,555 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_limit_value": "0",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "consumer": "projects/996778988454"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:25,555 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 5 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:25,935 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_6 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:25,935 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_location": "global",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_unit": "1/min/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:25,935 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 6 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:26,358 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_7 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:26,358 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:26,358 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 7 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:26,736 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_20 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:26,736 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_location": "global",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_unit": "1/min/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:26,736 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 20 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:27,125 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_21 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:27,125 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "consumer": "projects/996778988454",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:27,125 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 21 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:27,497 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_24 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:27,497 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/min/{project}",
+          "consumer": "projects/996778988454",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:27,497 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 24 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:27,871 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_26 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:27,871 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_limit_value": "0",
+          "consumer": "projects/996778988454",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:27,872 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 26 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:28,228 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_28 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:28,228 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_location": "global",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_unit": "1/min/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:28,229 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 28 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:28,614 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_30 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:28,615 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "quota_location": "global",
+          "consumer": "projects/996778988454",
+          "service": "mybusinessbusinessinformation.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:28,615 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 30 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:28,979 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_31 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:28,979 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "quota_location": "global",
+          "consumer": "projects/996778988454",
+          "service": "mybusinessbusinessinformation.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:28,979 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 31 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:28:29,576 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_32 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:28:29,576 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/min/{project}",
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit_value": "0"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:28:29,576 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 32 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:31:02,132 [ERROR] config_manager: Błąd odczytu konfiguracji: Expecting property name enclosed in double quotes: line 1 column 2 (char 1). Używam ustawień domyślnych.
+2026-06-10 12:31:02,139 [WARNING] config_manager: Brak klucza 'GBP_CLIENT_SECRETS' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:31:02,139 [WARNING] config_manager: Brak klucza 'GBP_TOKEN_FILE' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:31:02,139 [WARNING] config_manager: Brak klucza 'LOKALIZACJE' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:31:02,139 [WARNING] config_manager: Brak klucza 'EXCEL_FILE' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:31:02,139 [WARNING] config_manager: Brak klucza 'NOTIFICATIONS_ENABLED' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:31:02,139 [WARNING] config_manager: Brak klucza 'PRACOWNICY' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:31:02,139 [WARNING] config_manager: Brak klucza 'DZIALY' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:31:02,139 [INFO] config_manager: Migracja: klucz 'API_KEY' (Places API) jest przestarzały — używam teraz OAuth2 GBP.
+2026-06-10 12:31:02,196 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Kowalski' przez słowo 'kowalskiego' w opinii (metoda: rdzeń 'kowal')
+2026-06-10 12:31:02,196 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'rostka' w opinii (metoda: fuzzy 'rostek' -> 'rostka')
+2026-06-10 12:31:02,196 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Mariusz Cudny' przez słowo 'mariuszem' w opinii (metoda: rdzeń 'mariusz')
+2026-06-10 12:31:02,196 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'cielemeckim' w opinii (metoda: rdzeń 'cielem')
+2026-06-10 12:31:02,197 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Kowalski' przez słowo 'kowalski' w opinii (metoda: rdzeń 'kowal')
+2026-06-10 12:31:02,197 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Mariusz Cudny' przez słowo 'mariusza' w opinii (metoda: rdzeń 'mariusz')
+2026-06-10 12:31:02,197 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Kowalski' przez słowo 'kowalskiego' w opinii (metoda: rdzeń 'kowal')
+2026-06-10 12:31:02,197 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Mariusz Cudny' przez słowo 'mariuszem' w opinii (metoda: rdzeń 'mariusz')
+2026-06-10 12:32:35,594 [INFO] auth_manager: Wczytano token OAuth2 z: data/token.json
+2026-06-10 12:32:35,987 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_3 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:35,987 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_unit": "1/min/{project}",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_limit_value": "0",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:35,987 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 3 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:36,375 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_4 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:36,375 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:36,375 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 4 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:36,767 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_5 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:36,767 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "consumer": "projects/996778988454",
+          "service": "mybusinessbusinessinformation.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:36,767 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 5 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:37,668 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_6 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:37,668 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "consumer": "projects/996778988454",
+          "service": "mybusinessbusinessinformation.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:37,668 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 6 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:38,106 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_7 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:38,106 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_unit": "1/min/{project}",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_limit_value": "0",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:38,106 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 7 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:38,488 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_20 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:38,488 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global",
+          "quota_unit": "1/min/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:38,488 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 20 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:38,863 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_21 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:38,863 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_location": "global",
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:38,863 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 21 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:39,226 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_24 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:39,226 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "consumer": "projects/996778988454",
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit_value": "0",
+          "quota_unit": "1/min/{project}",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:39,226 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 24 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:39,591 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_26 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:39,592 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:39,592 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 26 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:39,966 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_28 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:39,966 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit_value": "0",
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:39,966 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 28 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:40,361 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_30 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:40,361 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "consumer": "projects/996778988454",
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:40,361 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 30 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:40,714 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_31 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:40,714 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:40,714 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 31 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:41,067 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_32 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:32:41,067 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit_value": "0",
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "service": "mybusinessbusinessinformation.googleapis.com"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:32:41,067 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 32 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:32:48,489 [INFO] gui.views.settings_view: Ustawienia GBP zapisane przez użytkownika
+2026-06-10 12:32:48,510 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karol' w opinii (metoda: rdzeń 'karol')
+2026-06-10 12:32:48,511 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'mila' w opinii (metoda: fuzzy 'emil' -> 'mila')
+2026-06-10 12:32:48,511 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'mila' w opinii (metoda: fuzzy 'emil' -> 'mila')
+2026-06-10 12:32:48,512 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'ja' w opinii (metoda: fuzzy 'jan' -> 'ja')
+2026-06-10 12:32:48,515 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'jasno' w opinii (metoda: fuzzy 'jan' -> 'jasno')
+2026-06-10 12:32:48,515 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'jana' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,515 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'jasno' w opinii (metoda: fuzzy 'jan' -> 'jasno')
+2026-06-10 12:32:48,516 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karol' w opinii (metoda: rdzeń 'karol')
+2026-06-10 12:32:48,516 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karolem' w opinii (metoda: rdzeń 'karol')
+2026-06-10 12:32:48,517 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'lipiecki' w opinii (metoda: rdzeń 'lip')
+2026-06-10 12:32:48,517 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'lipieckiego' w opinii (metoda: rdzeń 'lip')
+2026-06-10 12:32:48,518 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'aucie' w opinii (metoda: fuzzy 'maciej' -> 'aucie')
+2026-06-10 12:32:48,518 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'emilem' w opinii (metoda: rdzeń 'emil')
+2026-06-10 12:32:48,519 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'emilem' w opinii (metoda: rdzeń 'emil')
+2026-06-10 12:32:48,519 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'marczukiem' w opinii (metoda: rdzeń 'marczuk')
+2026-06-10 12:32:48,520 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'emila' w opinii (metoda: rdzeń 'emil')
+2026-06-10 12:32:48,520 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'macieja' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,520 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'maciejem' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,521 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'rostkiem' w opinii (metoda: fuzzy 'rostek' -> 'rostkiem')
+2026-06-10 12:32:48,521 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'macieja' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,521 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'macieja' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,522 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karoq' w opinii (metoda: fuzzy 'karol' -> 'karoq')
+2026-06-10 12:32:48,522 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'janem' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,522 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'janem' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,522 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'cielemeckiego' w opinii (metoda: rdzeń 'cielem')
+2026-06-10 12:32:48,522 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'jan' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,523 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'jana' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,523 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'emil' w opinii (metoda: rdzeń 'emil')
+2026-06-10 12:32:48,523 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karol' w opinii (metoda: rdzeń 'karol')
+2026-06-10 12:32:48,524 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'lipiecki' w opinii (metoda: rdzeń 'lip')
+2026-06-10 12:32:48,524 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'emila' w opinii (metoda: rdzeń 'emil')
+2026-06-10 12:32:48,524 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'marczukiem' w opinii (metoda: rdzeń 'marczuk')
+2026-06-10 12:32:48,525 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'maciej' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,525 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'cielemecki' w opinii (metoda: rdzeń 'cielem')
+2026-06-10 12:32:48,525 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'macieja' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,526 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'janem' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,526 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karolem' w opinii (metoda: rdzeń 'karol')
+2026-06-10 12:32:48,526 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'emila' w opinii (metoda: rdzeń 'emil')
+2026-06-10 12:32:48,527 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'macieja' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,527 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'janowi' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,527 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karol' w opinii (metoda: rdzeń 'karol')
+2026-06-10 12:32:48,528 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'marczuk' w opinii (metoda: rdzeń 'marczuk')
+2026-06-10 12:32:48,528 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'macieja' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,528 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Jan Cielemęcki' przez słowo 'jana' w opinii (metoda: rdzeń 'jan')
+2026-06-10 12:32:48,529 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Karol Lipiecki' przez słowo 'karol' w opinii (metoda: rdzeń 'karol')
+2026-06-10 12:32:48,529 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Emil Marczuk' przez słowo 'emila' w opinii (metoda: rdzeń 'emil')
+2026-06-10 12:32:48,530 [INFO] api_manager: [Klasyfikacja] Dopasowano pracownika 'Maciej Rostek' przez słowo 'maciej' w opinii (metoda: rdzeń 'maciej')
+2026-06-10 12:32:48,531 [INFO] api_manager: Reklasyfikacja zakończona. Zaktualizowano 3 opinii w bazie.
+2026-06-10 12:34:22,386 [ERROR] config_manager: Błąd odczytu konfiguracji: Expecting property name enclosed in double quotes: line 1 column 2 (char 1). Używam ustawień domyślnych.
+2026-06-10 12:34:22,393 [WARNING] config_manager: Brak klucza 'GBP_CLIENT_SECRETS' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:34:22,393 [WARNING] config_manager: Brak klucza 'GBP_TOKEN_FILE' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:34:22,393 [WARNING] config_manager: Brak klucza 'LOKALIZACJE' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:34:22,394 [WARNING] config_manager: Brak klucza 'EXCEL_FILE' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:34:22,394 [WARNING] config_manager: Brak klucza 'NOTIFICATIONS_ENABLED' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:34:22,394 [WARNING] config_manager: Brak klucza 'PRACOWNICY' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:34:22,394 [WARNING] config_manager: Brak klucza 'DZIALY' w konfiguracji — uzupełniam wartością domyślną.
+2026-06-10 12:34:22,394 [INFO] config_manager: Migracja: klucz 'API_KEY' (Places API) jest przestarzały — używam teraz OAuth2 GBP.
+2026-06-10 12:34:40,769 [INFO] auth_manager: Wczytano token OAuth2 z: data/token.json
+2026-06-10 12:34:41,200 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_3 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:41,200 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "consumer": "projects/996778988454"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:41,201 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 3 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:42,477 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_4 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:42,477 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_unit": "1/min/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:42,477 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 4 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:42,858 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_5 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:42,858 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/min/{project}",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_location": "global",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:42,858 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 5 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:43,259 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_6 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:43,259 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_location": "global",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_unit": "1/min/{project}"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:43,259 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 6 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:43,642 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_7 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:43,642 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_limit_value": "0",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_unit": "1/min/{project}",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:43,642 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 7 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:44,026 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_20 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:44,026 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit_value": "0",
+          "quota_location": "global",
+          "consumer": "projects/996778988454"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:44,026 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 20 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:44,394 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_21 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:44,394 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_limit_value": "0",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_unit": "1/min/{project}",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:44,394 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 21 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:44,787 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_24 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:44,788 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_location": "global",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_limit_value": "0"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:44,788 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 24 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:45,162 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_26 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:45,162 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "quota_unit": "1/min/{project}",
+          "quota_limit_value": "0",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:45,162 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 26 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:45,558 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_28 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:45,558 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_unit": "1/min/{project}",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_limit_value": "0",
+          "quota_location": "global",
+          "consumer": "projects/996778988454"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:45,558 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 28 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:45,940 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_30 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:45,940 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/min/{project}",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_location": "global",
+          "quota_limit_value": "0",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "consumer": "projects/996778988454",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:45,940 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 30 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:46,319 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_31 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:46,320 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "consumer": "projects/996778988454",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests",
+          "quota_location": "global",
+          "quota_unit": "1/min/{project}",
+          "quota_limit_value": "0",
+          "quota_limit": "DefaultRequestsPerMinutePerProject"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:46,320 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 31 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:46,706 [INFO] api_manager: HTTP Request: GET https://mybusinessbusinessinformation.googleapis.com/v1/locations/test_loc_32 | Params: {'readMask': 'name,title,metadata'} | Headers: {'Authorization': 'Bearer ***', 'Content-Type': 'application/json', 'Accept': 'application/json'}
+2026-06-10 12:34:46,706 [INFO] api_manager: HTTP Response Status: 429 | Body: {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'project_number:996778988454'.",
+    "status": "RESOURCE_EXHAUSTED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "RATE_LIMIT_EXCEEDED",
+        "domain": "googleapis.com",
+        "metadata": {
+          "quota_unit": "1/min/{project}",
+          "quota_limit": "DefaultRequestsPerMinutePerProject",
+          "consumer": "projects/996778988454",
+          "quota_limit_value": "0",
+          "quota_location": "global",
+          "service": "mybusinessbusinessinformation.googleapis.com",
+          "quota_metric": "mybusinessbusinessinformation.googleapis.com/default_requests"
+        }
+      },
+      {
+        "@type": "type.googleapis.com/google.rpc.Help",
+        "links": [
+          {
+            "description": "Request a higher quota limit.",
+            "url": "https://cloud.google.com/docs/quotas/help/request_increase"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+2026-06-10 12:34:46,706 [ERROR] api_manager: Błąd API szczegóły dla 'Testowa Lokalizacja Google 32 Sp. z o.o.': 429 — {
+  "error": {
+    "code": 429,
+    "message": "Quota exceeded for quota metric 'Requests' and limit 'Requests per minute' of service 'mybusinessbusinessinformation.googleapis.com' for consumer 'proje
+2026-06-10 12:34:48,265 [INFO] gui.views.settings_view: Ustawienia GBP zapisane przez użytkownika
+2026-06-10 12:34:48,303 [INFO] api_manager: Reklasyfikacja zakończona. Zaktualizowano 0 opinii w bazie.
