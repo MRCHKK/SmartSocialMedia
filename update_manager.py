@@ -9,7 +9,7 @@ import sys
 
 logger = logging.getLogger(__name__)
 
-VERSION = "3.1"
+VERSION = "3.3"
 DEFAULT_UPDATE_URL = "https://raw.githubusercontent.com/MRCHKK/SmartSocialMedia/refs/heads/main/version.json"
 
 def download_and_install_update(download_url: str) -> bool:
@@ -17,6 +17,8 @@ def download_and_install_update(download_url: str) -> bool:
     Pobiera plik ZIP z download_url, wypakowuje go do katalogu tymczasowego,
     tworzy skrypt updater.bat i uruchamia go w tle, po czym zwraca True.
     """
+
+
     try:
         print(f"[Self-Updater] Pobieranie aktualizacji z: {download_url}")
         response = requests.get(download_url, timeout=60, stream=True)
