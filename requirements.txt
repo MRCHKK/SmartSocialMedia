@@ -1,0 +1,10 @@
+requests
+python-dateutil
+pandas
+openpyxl
+customtkinter
+google-genai
+plyer
+google-auth
+google-auth-oauthlib
+google-api-python-client
