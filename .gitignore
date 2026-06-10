@@ -1,0 +1,22 @@
+# Pliki konfiguracyjne i wrażliwe dane użytkownika
+data/token.json
+data/credentials.json
+config.json
+
+# Logi i raporty
+logs/
+raporty/
+*.log
+
+# Foldery budowania PyInstaller i Pythona
+dist/
+build/
+__pycache__/
+*.spec
+*.pyc
+
+# Środowisko i edytory
+.vscode/
+.idea/
+venv/
+.env
