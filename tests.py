@@ -1,9 +1,11 @@
 # tests.py — Testy jednostkowe dla kluczowych funkcji
 import unittest
+import unittest.mock
 import os
 import json
 
 import config_manager
+import update_manager
 from api_manager import formatuj_czas_warszawa, przypisz_kategorie
 
 
@@ -306,6 +308,96 @@ class TestMapujRecenzje(unittest.TestCase):
         res = mapuj_recenzje(r, "L", {})
         self.assertEqual(res["Tresc"], "")
         self.assertEqual(res["Data"], "")
+
+
+class TestUpdateManager(unittest.TestCase):
+    """Testy modułu aktualizacji (update_manager)."""
+
+    @unittest.mock.patch('update_manager.requests.get')
+    def test_check_for_updates_newer_version(self, mock_get):
+        # Symulacja nowszej wersji na serwerze
+        mock_response = unittest.mock.MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "version": "9.9",
+            "download_url": "https://example.com/update.zip",
+            "changelog": "Nowe funkcje"
+        }
+        mock_get.return_value = mock_response
+
+        res = update_manager.check_for_updates("https://dummy.url")
+        self.assertIsNotNone(res)
+        self.assertEqual(res["version"], "9.9")
+        self.assertEqual(res["download_url"], "https://example.com/update.zip")
+
+    @unittest.mock.patch('update_manager.requests.get')
+    def test_check_for_updates_older_version(self, mock_get):
+        # Symulacja starszej wersji na serwerze
+        mock_response = unittest.mock.MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "version": "1.0",
+            "download_url": "https://example.com/update.zip",
+            "changelog": "Stara wersja"
+        }
+        mock_get.return_value = mock_response
+
+        res = update_manager.check_for_updates("https://dummy.url")
+        self.assertIsNone(res)
+
+    @unittest.mock.patch('update_manager.requests.get')
+    @unittest.mock.patch('update_manager.subprocess.Popen')
+    @unittest.mock.patch('update_manager.zipfile.ZipFile')
+    def test_download_and_install_update(self, mock_zip, mock_popen, mock_get):
+        # Symulacja pobierania pliku ZIP i uruchomienia instalatora PowerShell
+        mock_response = unittest.mock.MagicMock()
+        mock_response.status_code = 200
+        mock_response.iter_content.return_value = [b"dummy data"]
+        mock_get.return_value = mock_response
+
+        with unittest.mock.patch('update_manager.tempfile.mkdtemp', return_value="dummy_temp"), \
+             unittest.mock.patch('update_manager.os.makedirs'), \
+             unittest.mock.patch('update_manager.os.listdir', return_value=[]), \
+             unittest.mock.patch('builtins.open', unittest.mock.mock_open()):
+             
+            success = update_manager.download_and_install_update("https://example.com/update.zip")
+            self.assertTrue(success)
+
+            # Sprawdzamy czy popen uruchomił skrót powershell z odpowiednimi flagami
+            mock_popen.assert_called_once()
+            args = mock_popen.call_args[0][0]
+            self.assertEqual(args[0], "powershell")
+            self.assertIn("-ExecutionPolicy", args)
+            self.assertIn("Bypass", args)
+
+
+class TestLoggingAndRetention(unittest.TestCase):
+    """Testy logowania klasyfikacji oraz mechanizmu retencji logów."""
+
+    @unittest.mock.patch('api_manager.os.makedirs')
+    @unittest.mock.patch('api_manager.os.listdir')
+    @unittest.mock.patch('api_manager.os.remove')
+    @unittest.mock.patch('builtins.open', new_callable=unittest.mock.mock_open)
+    def test_log_review_classification_and_retention(self, mock_file, mock_remove, mock_listdir, mock_makedirs):
+        from api_manager import _log_review_classification
+        import datetime
+        
+        # Symulacja listy plików w folderze logs
+        now_date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        mock_listdir.return_value = [
+            "review_2020-01-01.log",
+            f"review_{now_date_str}.log",
+            "other_file.txt"
+        ]
+        
+        _log_review_classification("Test message")
+        
+        # Sprawdzamy czy spróbowano otworzyć plik z dzisiejszą datą
+        expected_log_file = f"logs/review_{now_date_str}.log"
+        mock_file.assert_called_with(expected_log_file, "a", encoding="utf-8")
+        
+        # Sprawdzamy czy usunięto stary log
+        mock_remove.assert_called_once_with(os.path.join("logs", "review_2020-01-01.log"))
 
 
 if __name__ == "__main__":

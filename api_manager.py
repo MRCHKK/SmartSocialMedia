@@ -105,9 +105,25 @@ import datetime
 def _log_review_classification(message: str):
     try:
         os.makedirs("logs", exist_ok=True)
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
-        with open("logs/review.log", "a", encoding="utf-8") as f:
+        now = datetime.datetime.now()
+        timestamp = now.strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
+        log_date_str = now.strftime("%Y-%m-%d")
+        log_file = f"logs/review_{log_date_str}.log"
+        
+        with open(log_file, "a", encoding="utf-8") as f:
             f.write(f"{timestamp} {message}\n")
+            
+        # Retention: remove review log files older than 7 days
+        for filename in os.listdir("logs"):
+            if filename.startswith("review_") and filename.endswith(".log"):
+                date_part = filename[7:-4] # extracting YYYY-MM-DD
+                try:
+                    file_date = datetime.datetime.strptime(date_part, "%Y-%m-%d")
+                    age = now - file_date
+                    if age.days > 7:
+                        os.remove(os.path.join("logs", filename))
+                except ValueError:
+                    pass
     except Exception:
         pass
 
@@ -207,17 +223,21 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
                     czlon_rdzen = pobierz_rdzen(czlon)
 
                     dopasowanie_rdzen = False
+                    matching_word = ""
                     for w_norm, w_rdzen in zip(slowa_norm, slowa_rdzenie):
                         if czlon_rdzen == w_rdzen or w_norm.startswith(czlon_rdzen):
                             dopasowanie_rdzen = True
+                            matching_word = w_norm
                             break
                     
                     if dopasowanie_rdzen:
+                        _log_review_classification(f"[Klasyfikacja] Dopasowano dzial '{dzial}' przez slowo '{matching_word}' w opinii (metoda: rdzen '{czlon_rdzen}')")
                         return dzial
 
                     cutoff_val = 0.85 if len(czlon_norm) <= 4 else 0.75
                     matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=cutoff_val)
                     if matches:
+                        _log_review_classification(f"[Klasyfikacja] Dopasowano dzial '{dzial}' przez slowo '{matches[0]}' w opinii (metoda: fuzzy '{czlon_norm}' -> '{matches[0]}')")
                         return dzial
 
     return "Ogólne"

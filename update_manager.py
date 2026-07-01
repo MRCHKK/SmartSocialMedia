@@ -9,7 +9,7 @@ import sys
 
 logger = logging.getLogger(__name__)
 
-VERSION = "3.5"
+VERSION = "3.6"
 DEFAULT_UPDATE_URL = "https://raw.githubusercontent.com/MRCHKK/SmartSocialMedia/refs/heads/main/version.json"
 
 def download_and_install_update(download_url: str) -> bool:
@@ -58,45 +58,93 @@ def download_and_install_update(download_url: str) -> bool:
         print(f"[Self-Updater] Ścieżka źródłowa kopiowania: {src_dir}")
         print(f"[Self-Updater] Ścieżka docelowa kopiowania: {app_dir}")
         
-        bat_path = os.path.join(temp_dir, "updater.bat")
+        ps_path = os.path.join(temp_dir, "updater.ps1")
         
-        # Skrypt wsadowy czekający na zamknięcie procesu głównego
-        bat_content = f"""@echo off
-chcp 65001 > nul
-echo [Self-Updater] Czekam na wyłączenie aplikacji...
-:wait
-tasklist /FI "IMAGENAME eq {os.path.basename(current_exe)}" 2>NUL | find /I /N "{os.path.basename(current_exe)}">NUL
-if "%ERRORLEVEL%"=="0" (
-    timeout /t 1 /nobreak >nul
-    goto wait
-)
-timeout /t 1 /nobreak >nul
-
-echo [Self-Updater] Instalacja aktualizacji (kopiowanie plików)...
-xcopy /y /s /e "{src_dir}\\*" "{app_dir}\\" > nul
-
-echo [Self-Updater] Uruchamianie zaktualizowanej aplikacji...
-"""
-
+        exe_name = os.path.basename(current_exe)
+        
         if is_exe:
-            bat_content += f'start "" "{current_exe}"\n'
+            start_command = f'Start-Process -FilePath "{current_exe}"'
         else:
             main_script = os.path.join(app_dir, "main_gui.py")
-            bat_content += f'start "" py "{main_script}"\n'
-            
-        bat_content += f"""echo [Self-Updater] Czyszczenie plików tymczasowych...
-start /b "" cmd /c del /f /q "{bat_path}" ^& rmdir /s /q "{temp_dir}"
-exit
+            start_command = f'Start-Process -FilePath "py" -ArgumentList `"{main_script}`"'
+
+        import datetime
+        now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        ps_content = f"""[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$Host.UI.RawUI.WindowTitle = "SmartSocialMedia Auto-Updater"
+
+Write-Host "[Self-Updater] Czekam na zamkniecie aplikacji..." -ForegroundColor Cyan
+
+$exeName = "{exe_name}"
+$processName = [System.IO.Path]::GetFileNameWithoutExtension($exeName)
+
+while (Get-Process -Name $processName -ErrorAction SilentlyContinue) {{
+    Start-Sleep -Seconds 1
+}}
+Start-Sleep -Seconds 1
+
+$src = "{src_dir}"
+$dest = "{app_dir}"
+$logPath = Join-Path $dest "logs\\update.log"
+
+try {{
+    $logDir = Split-Path $logPath
+    if (!(Test-Path $logDir)) {{
+        New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+    }}
+    
+    "[{now_str}] Rozpoczecie aktualizacji z $src do $dest" | Out-File -Append -FilePath $logPath -Encoding utf8
+    
+    Write-Host "[Self-Updater] Kopiowanie plikow..." -ForegroundColor Yellow
+    
+    $files = Get-ChildItem -Path $src -Recurse | Where-Object {{ !$_.PSIsContainer }}
+    $total = $files.Count
+    $current = 0
+    
+    foreach ($file in $files) {{
+        $current++
+        $percent = ($current / $total) * 100
+        
+        $relPath = $file.FullName.Substring($src.Length).TrimStart([System.IO.Path]::DirectorySeparatorChar)
+        
+        Write-Progress -Activity "Aktualizowanie SmartSocialMedia" -Status "Kopiowanie: $relPath" -PercentComplete $percent
+        
+        $target = Join-Path $dest $relPath
+        $targetDir = Split-Path $target
+        if (!(Test-Path $targetDir)) {{
+            New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+        }}
+        
+        Copy-Item -Path $file.FullName -Destination $target -Force
+    }}
+    
+    "[{now_str}] Aktualizacja zakonczona sukcesem" | Out-File -Append -FilePath $logPath -Encoding utf8
+    Write-Host "[Self-Updater] Aktualizacja zakonczona sukcesem!" -ForegroundColor Green
+    
+    Write-Host "[Self-Updater] Uruchamianie aplikacji..." -ForegroundColor Cyan
+    {start_command}
+    
+}} catch {{
+    "[{now_str}] Blad aktualizacji: $_" | Out-File -Append -FilePath $logPath -Encoding utf8
+    Write-Host "X Blad instalacji: $_" -ForegroundColor Red
+    Write-Host "Szczegoly bledu zostaly zapisane w pliku: $logPath" -ForegroundColor Yellow
+    Read-Host "Nacisnij klawisz Enter, aby zamknac..."
+    exit 1
+}} finally {{
+    # Czyszczenie folderu tymczasowego w osobnym procesie w tle
+    Start-Process cmd.exe -ArgumentList "/c timeout /t 2 /nobreak >nul & rmdir /s /q `"{temp_dir}`"" -WindowStyle Hidden
+}}
 """
         
-        with open(bat_path, "w", encoding="utf-8") as f:
-            f.write(bat_content)
+        with open(ps_path, "w", encoding="utf-8") as f:
+            f.write(ps_content)
             
-        print("[Self-Updater] Wygenerowano updater.bat. Uruchamiam proces instalacji...")
+        print("[Self-Updater] Wygenerowano updater.ps1. Uruchamiam proces instalacji...")
         
-        # Uruchamiamy .bat jako całkowicie odseparowany proces
+        # Uruchamiamy powershell w nowym konsolowym oknie
         subprocess.Popen(
-            [bat_path],
+            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ps_path],
             creationflags=subprocess.CREATE_NEW_CONSOLE,
             close_fds=True
         )

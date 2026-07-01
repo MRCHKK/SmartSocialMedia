@@ -1,5 +1,5 @@
 {
-  "version": "3.5",
-  "download_url": "https://github.com/MRCHKK/SmartSocialMedia/releases/download/3.5/SmartSocialMedia.zip",
+  "version": "3.6",
+  "download_url": "https://github.com/MRCHKK/SmartSocialMedia/releases/download/3.6/SmartSocialMedia.zip",
   "changelog": "Poprawa dopasowania rozmytego pracowników w klasyfikacji recenzji oraz asynchroniczne pobieranie z przycisku Zaktualizuj widok."
 }
