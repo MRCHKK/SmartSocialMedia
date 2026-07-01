@@ -216,29 +216,41 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
         # Szukamy zarówno po pełnej nazwie działu, jak i po jego członach / aliasach
         wyszukiwane_frazy = [dzial] + synonimy
         for fraza in wyszukiwane_frazy:
-            czlony = fraza.lower().split()
+            czlony = [c for c in fraza.lower().split() if len(c) > 2]
+            if not czlony:
+                continue
+                
+            pasuje_cala_fraza = True
+            log_details = []
+            
             for czlon in czlony:
-                if len(czlon) > 2:
-                    czlon_norm = usun_diakrytyki(czlon)
-                    czlon_rdzen = pobierz_rdzen(czlon)
-
-                    dopasowanie_rdzen = False
-                    matching_word = ""
-                    for w_norm, w_rdzen in zip(slowa_norm, slowa_rdzenie):
-                        if czlon_rdzen == w_rdzen or w_norm.startswith(czlon_rdzen):
-                            dopasowanie_rdzen = True
-                            matching_word = w_norm
-                            break
-                    
-                    if dopasowanie_rdzen:
-                        _log_review_classification(f"[Klasyfikacja] Dopasowano dzial '{dzial}' przez slowo '{matching_word}' w opinii (metoda: rdzen '{czlon_rdzen}')")
-                        return dzial
-
+                czlon_norm = usun_diakrytyki(czlon)
+                czlon_rdzen = pobierz_rdzen(czlon)
+                
+                dopasowano_czlon = False
+                
+                # 1. Krok: Dopasowanie rdzeniowe / podciągu
+                for w_norm, w_rdzen in zip(slowa_norm, slowa_rdzenie):
+                    if czlon_rdzen == w_rdzen or w_norm.startswith(czlon_rdzen):
+                        dopasowano_czlon = True
+                        log_details.append(f"rdzen '{czlon_rdzen}' -> '{w_norm}'")
+                        break
+                        
+                # 2. Krok: Fuzzy fallback
+                if not dopasowano_czlon:
                     cutoff_val = 0.85 if len(czlon_norm) <= 4 else 0.75
                     matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=cutoff_val)
                     if matches:
-                        _log_review_classification(f"[Klasyfikacja] Dopasowano dzial '{dzial}' przez slowo '{matches[0]}' w opinii (metoda: fuzzy '{czlon_norm}' -> '{matches[0]}')")
-                        return dzial
+                        dopasowano_czlon = True
+                        log_details.append(f"fuzzy '{czlon_norm}' -> '{matches[0]}'")
+                        
+                if not dopasowano_czlon:
+                    pasuje_cala_fraza = False
+                    break
+            
+            if pasuje_cala_fraza:
+                _log_review_classification(f"[Klasyfikacja] Dopasowano dzial '{dzial}' przez fraze '{fraza}' (szczegoly: {', '.join(log_details)})")
+                return dzial
 
     return "Ogólne"
 

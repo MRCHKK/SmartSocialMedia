@@ -176,6 +176,18 @@ class TestPrzypisKategorie(unittest.TestCase):
             "Mariusz Cudny"
         )
 
+    def test_wielowyrazowe_kategorie_and_matching(self):
+        config_test = {
+            "PRACOWNICY": [],
+            "DZIALY": ["samochody używane"]
+        }
+        # Tylko "samochód" -> brak dopasowania
+        self.assertEqual(przypisz_kategorie("Kupiłem tam świetny samochód", config_test), "Ogólne")
+        # Tylko "używane" -> brak dopasowania
+        self.assertEqual(przypisz_kategorie("Wszystko było bardzo używane i zniszczone", config_test), "Ogólne")
+        # Oba człony obecne -> dopasowanie
+        self.assertEqual(przypisz_kategorie("Jestem zadowolony z zakupu używanego samochodu", config_test), "samochody używane")
+
     def test_precyzja_fuzzy_matching_eryk_very(self):
         # Słowo "very" nie powinno zostać dopasowane do imienia "Eryk"
         self.assertEqual(

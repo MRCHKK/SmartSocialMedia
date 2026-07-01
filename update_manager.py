@@ -9,7 +9,7 @@ import sys
 
 logger = logging.getLogger(__name__)
 
-VERSION = "3.6"
+VERSION = "3.7"
 DEFAULT_UPDATE_URL = "https://raw.githubusercontent.com/MRCHKK/SmartSocialMedia/refs/heads/main/version.json"
 
 def download_and_install_update(download_url: str) -> bool:
@@ -102,25 +102,45 @@ try {{
     $total = $files.Count
     $current = 0
     
+    $copiedCount = 0
+    $skippedCount = 0
+    
     foreach ($file in $files) {{
         $current++
         $percent = ($current / $total) * 100
         
         $relPath = $file.FullName.Substring($src.Length).TrimStart([System.IO.Path]::DirectorySeparatorChar)
         
-        Write-Progress -Activity "Aktualizowanie SmartSocialMedia" -Status "Kopiowanie: $relPath" -PercentComplete $percent
+        Write-Progress -Activity "Aktualizowanie SmartSocialMedia" -Status "Analizowanie: $relPath" -PercentComplete $percent
         
         $target = Join-Path $dest $relPath
-        $targetDir = Split-Path $target
-        if (!(Test-Path $targetDir)) {{
-            New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+        
+        $shouldCopy = $true
+        if (Test-Path $target) {{
+            $targetFile = Get-Item $target
+            if ($file.Length -eq $targetFile.Length) {{
+                $srcHash = (Get-FileHash -Path $file.FullName -Algorithm MD5).Hash
+                $dstHash = (Get-FileHash -Path $target -Algorithm MD5).Hash
+                if ($srcHash -eq $dstHash) {{
+                    $shouldCopy = $false
+                }}
+            }}
         }}
         
-        Copy-Item -Path $file.FullName -Destination $target -Force
+        if ($shouldCopy) {{
+            $targetDir = Split-Path $target
+            if (!(Test-Path $targetDir)) {{
+                New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+            }}
+            Copy-Item -Path $file.FullName -Destination $target -Force
+            $copiedCount++
+        }} else {{
+            $skippedCount++
+        }}
     }}
     
-    "[{now_str}] Aktualizacja zakonczona sukcesem" | Out-File -Append -FilePath $logPath -Encoding utf8
-    Write-Host "[Self-Updater] Aktualizacja zakonczona sukcesem!" -ForegroundColor Green
+    "[{now_str}] Aktualizacja zakonczona sukcesem. Skopiowano: $copiedCount, Pominieto: $skippedCount" | Out-File -Append -FilePath $logPath -Encoding utf8
+    Write-Host "[Self-Updater] Aktualizacja zakonczona sukcesem! (Skopiowano: $copiedCount, Pominieto: $skippedCount)" -ForegroundColor Green
     
     Write-Host "[Self-Updater] Uruchamianie aplikacji..." -ForegroundColor Cyan
     {start_command}
