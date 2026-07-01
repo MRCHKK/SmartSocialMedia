@@ -177,7 +177,8 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
                     return pracownik
 
                 # 2. Krok: Fuzzy fallback
-                matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=0.68)
+                cutoff_val = 0.85 if len(czlon_norm) <= 4 else 0.75
+                matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=cutoff_val)
                 if matches:
                     _log_review_classification(f"[Klasyfikacja] Dopasowano pracownika '{pracownik}' przez słowo '{matches[0]}' w opinii (metoda: fuzzy '{czlon_norm}' -> '{matches[0]}')")
                     return pracownik
@@ -214,7 +215,8 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
                     if dopasowanie_rdzen:
                         return dzial
 
-                    matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=0.68)
+                    cutoff_val = 0.85 if len(czlon_norm) <= 4 else 0.75
+                    matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=cutoff_val)
                     if matches:
                         return dzial
 

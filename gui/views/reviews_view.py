@@ -5,6 +5,11 @@ import datetime
 from tkinter import ttk
 
 import config_manager
+import threading
+import logging
+import api_manager
+
+logger = logging.getLogger(__name__)
 
 class ReviewsView(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -32,12 +37,12 @@ class ReviewsView(ctk.CTkFrame):
         self.search_entry.pack(side="right", padx=(10, 0))
         self.search_entry.bind("<KeyRelease>", self._filter_data)
 
-        btn_reload = ctk.CTkButton(
+        self.btn_reload = ctk.CTkButton(
             header_frame, text="Zaktualizuj widok", width=120, height=35,
             fg_color="#444", hover_color="#333",
-            command=self.load_data
+            command=self.refresh_data_from_api
         )
-        btn_reload.pack(side="right")
+        self.btn_reload.pack(side="right")
 
         # --- DATA GRID (TREEVIEW) ---
         style = ttk.Style()
@@ -122,6 +127,21 @@ class ReviewsView(ctk.CTkFrame):
             self._clear_details()
         except Exception as e:
             self._display_message(f"Błąd odczytu bazy: {e}")
+
+    def refresh_data_from_api(self):
+        self.btn_reload.configure(state="disabled", text="Pobieranie...")
+        def task():
+            try:
+                api_manager.pobierz_z_google()
+            except Exception as e:
+                logger.exception("Błąd pobierania opinii z poziomu widoku")
+            finally:
+                self.after(0, self._on_refresh_done)
+        threading.Thread(target=task, daemon=True).start()
+
+    def _on_refresh_done(self):
+        self.btn_reload.configure(state="normal", text="Zaktualizuj widok")
+        self.load_data()
 
     def _render_tree(self, df):
         self.tree.delete(*self.tree.get_children())

@@ -174,6 +174,24 @@ class TestPrzypisKategorie(unittest.TestCase):
             "Mariusz Cudny"
         )
 
+    def test_precyzja_fuzzy_matching_eryk_very(self):
+        # Słowo "very" nie powinno zostać dopasowane do imienia "Eryk"
+        self.assertEqual(
+            przypisz_kategorie("The service was very good indeed", {
+                "PRACOWNICY": ["Eryk Nowak"],
+                "DZIALY": ["Serwis"]
+            }),
+            "Ogólne"
+        )
+        # Słowo "Erykowi" powinno zostać poprawnie dopasowane przez dopasowanie rdzeniowe
+        self.assertEqual(
+            przypisz_kategorie("Podziękowania dla pana Erykowi za pomoc", {
+                "PRACOWNICY": ["Eryk Nowak"],
+                "DZIALY": ["Serwis"]
+            }),
+            "Eryk Nowak"
+        )
+
 
 class TestConfigManager(unittest.TestCase):
     """Testy ładowania i walidacji konfiguracji."""
