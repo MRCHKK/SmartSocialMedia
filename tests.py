@@ -193,7 +193,8 @@ class TestPrzypisKategorie(unittest.TestCase):
         self.assertEqual(
             przypisz_kategorie("The service was very good indeed", {
                 "PRACOWNICY": ["Eryk Nowak"],
-                "DZIALY": ["Serwis"]
+                "DZIALY": ["Serwis"],
+                "USE_AI_MODEL": False
             }),
             "Ogólne"
         )
@@ -412,5 +413,72 @@ class TestLoggingAndRetention(unittest.TestCase):
         mock_remove.assert_called_once_with(os.path.join("logs", "review_2020-01-01.log"))
 
 
+class TestEmployeeDepartmentMapping(unittest.TestCase):
+    """Testy pomocników i zliczania pracowników w działach."""
+
+    def test_get_employee_helpers(self):
+        # Pomocniki z config_manager
+        self.assertEqual(config_manager.get_employee_name("Jan Kowalski"), "Jan Kowalski")
+        self.assertEqual(config_manager.get_employee_department("Jan Kowalski"), "SERWIS")
+
+        item_dict = {"imie_nazwisko": "Anna Nowak", "dzial": "SALON"}
+        self.assertEqual(config_manager.get_employee_name(item_dict), "Anna Nowak")
+        self.assertEqual(config_manager.get_employee_department(item_dict), "SALON")
+
+    def test_przypisz_kategorie_z_dict_pracownika(self):
+        config_dict = {
+            "PRACOWNICY": {
+                "accounts/123/locations/test_loc_1": [
+                    {"imie_nazwisko": "Jan Kowalski", "dzial": "SERWIS"}
+                ]
+            },
+            "DZIALY": ["SERWIS", "SALON"]
+        }
+        res = przypisz_kategorie("Opinia o panu Janie Kowalskim", "accounts/123/locations/test_loc_1", config_dict)
+        self.assertEqual(res, "Jan Kowalski")
+
+    def test_excel_buduj_dane_lokalizacji_z_mapowaniem(self):
+        import pandas as pd
+        from excel_manager import _buduj_dane_lokalizacji, _build_emp_dept_map
+
+        config_test = {
+            "LOKALIZACJE": {
+                "loc_1": "Testowa Lokalizacja"
+            },
+            "PRACOWNICY": {
+                "loc_1": [
+                    {"imie_nazwisko": "Jan Kowalski", "dzial": "SERWIS"},
+                    {"imie_nazwisko": "Anna Nowak", "dzial": "SALON"}
+                ]
+            },
+            "DZIALY": ["SERWIS", "SALON"]
+        }
+
+        emp_map = _build_emp_dept_map(config_test, "Testowa Lokalizacja")
+        self.assertEqual(emp_map.get("Jan Kowalski"), "SERWIS")
+        self.assertEqual(emp_map.get("Anna Nowak"), "SALON")
+
+        # DF opinii
+        df_lok = pd.DataFrame([
+            {"Ocena": 5, "Kategoria": "Jan Kowalski"},
+            {"Ocena": 4, "Kategoria": "Jan Kowalski"},
+            {"Ocena": 5, "Kategoria": "Anna Nowak"},
+            {"Ocena": 3, "Kategoria": "SERWIS"}
+        ])
+
+        aktywne_kategorie = set(config_test["DZIALY"] + ["Ogólne"])
+        dane = _buduj_dane_lokalizacji(df_lok, config_test["DZIALY"], aktywne_kategorie, emp_map)
+
+        # SERWIS powinien zawierać 2 opinie Jana Kowalskiego + 1 bezpośrednią opinie SERWIS
+        self.assertEqual(dane["dzialy"]["SERWIS"][5], 1)
+        self.assertEqual(dane["dzialy"]["SERWIS"][4], 1)
+        self.assertEqual(dane["dzialy"]["SERWIS"][3], 1)
+        # SALON powinien zawierać 1 opinie Anny Nowak (5 gwiazdek)
+        self.assertEqual(dane["dzialy"]["SALON"][5], 1)
+        # Brak wiersza z imieniem pracownika w słowniku działów
+        self.assertNotIn("Jan Kowalski", dane["dzialy"])
+
+
 if __name__ == "__main__":
     unittest.main()
+

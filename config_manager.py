@@ -16,6 +16,21 @@ logger = logging.getLogger(__name__)
 
 CONFIG_FILE = "config.json"
 
+
+def get_employee_name(item):
+    """Zwraca nazwę/imię i nazwisko pracownika niezależnie od formatu (dict lub str)."""
+    if isinstance(item, dict):
+        return item.get("imie_nazwisko") or item.get("name") or ""
+    return str(item) if item else ""
+
+
+def get_employee_department(item, default="SERWIS"):
+    """Zwraca dział przypisany do pracownika niezależnie od formatu (dict lub str)."""
+    if isinstance(item, dict):
+        return item.get("dzial") or default
+    return default
+
+
 DEFAULT_CONFIG = {
     # --- Google Business Profile API (OAuth 2.0) ---
     # Pobierz client_secrets.json z Google Cloud Console:

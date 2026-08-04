@@ -10,6 +10,7 @@ import config_manager
 import auth_manager
 from gui.components.dynamic_dict_editor import DynamicDictEditor
 from gui.components.dynamic_list_editor import DynamicListEditor
+from gui.components.employee_list_editor import EmployeeListEditor
 
 logger = logging.getLogger(__name__)
 
@@ -584,6 +585,13 @@ class SettingsView(ctk.CTkScrollableFrame):
                     editor_frame.destroy()
                 self.location_employee_editors.pop(loc_id, None)
 
+        # Pobierz aktualne działy
+        dzialy = []
+        if hasattr(self, 'editor_dzialy') and self.editor_dzialy.winfo_exists():
+            dzialy = self.editor_dzialy.get_data()
+        if not dzialy:
+            dzialy = config.get("DZIALY", ["SERWIS"])
+
         # 2. Utwórz/aktualizuj edytory dla lokalizacji
         for loc_id, custom_name in aktualne_lokalizacje.items():
             if loc_id not in self.location_employee_editors:
@@ -598,11 +606,12 @@ class SettingsView(ctk.CTkScrollableFrame):
                 elif isinstance(zapisani_pracownicy, list) and not wpisane_dane.get(loc_id):
                     initial_list = zapisani_pracownicy
                 
-                editor = DynamicListEditor(
+                editor = EmployeeListEditor(
                     card, 
                     title=f"Klasyfikacja: Pracownicy dla '{custom_name}'",
                     val_placeholder="Pełne Imię i Nazwisko",
-                    initial_list=initial_list
+                    initial_list=initial_list,
+                    departments=dzialy
                 )
                 editor.pack(fill="both", expand=True, padx=10, pady=10)
                 
@@ -612,8 +621,9 @@ class SettingsView(ctk.CTkScrollableFrame):
                 # Przyśpieszenie scrollowania dla nowych elementów
                 self._bind_fast_scroll(card)
             else:
-                # Zaktualizuj tytuł edytora jeśli nazwa lokalizacji się zmieniła
+                # Zaktualizuj tytuł i opcje edytora jeśli nazwa lokalizacji lub działy się zmieniły
                 self.location_employee_editors[loc_id].configure_title(f"Klasyfikacja: Pracownicy dla '{custom_name}'")
+                self.location_employee_editors[loc_id].update_departments(dzialy)
 
     def _run_reclassification(self):
         # Najpierw zapisz aktualne ustawienia, żeby reklasyfikacja użyła nowych list pracowników/działów

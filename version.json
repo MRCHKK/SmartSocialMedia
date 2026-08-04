@@ -1,5 +1,5 @@
 {
-  "version": "3.8",
-  "download_url": "https://github.com/MRCHKK/SmartSocialMedia/releases/download/3.8/SmartSocialMedia.zip",
-  "changelog": "Dodanie lokalnego modelu AI (Zero-Shot Polish PolBERT) z możliwością automatycznego pobierania modelu w tle."
+  "version": "3.9",
+  "download_url": "https://github.com/MRCHKK/SmartSocialMedia/releases/download/3.9/SmartSocialMedia.zip",
+  "changelog": "Dodanie przypisywania pracowników do działów w Ustawieniach oraz automatyczne zliczanie ich opinii pod właściwym działem w raporcie Excel."
 }

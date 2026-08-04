@@ -133,8 +133,8 @@ def get_review_model():
     global _review_pipeline, _review_model_loaded
     if not _review_model_loaded:
         try:
-            from transformers import pipeline
             import torch
+            from transformers import AutoTokenizer, AutoModelForSequenceClassification, ZeroShotClassificationPipeline
             
             # Bezpieczny limit wątków CPU dla słabszych procesorów, by nie przeciążać komputera
             if hasattr(torch, "set_num_threads"):
@@ -144,13 +144,14 @@ def get_review_model():
                     pass
 
             model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'model_zero_shot')
-            if os.path.exists(model_dir):
-                # Ładowanie całkowicie offline z pobranego folderu
-                os.environ["HF_HUB_OFFLINE"] = "1"
-                _review_pipeline = pipeline("zero-shot-classification", model=model_dir)
+            if not os.path.exists(model_dir) or not os.path.exists(os.path.join(model_dir, "model.safetensors")):
+                model_dir = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
             else:
-                # Fallback do pobrania (tylko w trybie dev przed zbudowaniem)
-                _review_pipeline = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
+                os.environ["HF_HUB_OFFLINE"] = "1"
+
+            tokenizer = AutoTokenizer.from_pretrained(model_dir)
+            model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+            _review_pipeline = ZeroShotClassificationPipeline(model=model, tokenizer=tokenizer)
         except (Exception, MemoryError) as e:
             logger.error(f"Nie udało się zainicjować modelu mDeBERTa-v3-base: {e}")
             _review_pipeline = None
@@ -229,20 +230,26 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
 
     # Przygotowanie wszystkich dostępnych kategorii z ustawień
     pracownicy_config = config.get("PRACOWNICY", {})
-    pracownicy = []
+    pracownicy_raw = []
     if isinstance(pracownicy_config, dict):
         if location_id and location_id in pracownicy_config:
-            pracownicy.extend(pracownicy_config[location_id])
+            pracownicy_raw.extend(pracownicy_config[location_id])
         if "global" in pracownicy_config:
             for p in pracownicy_config["global"]:
-                if p not in pracownicy:
-                    pracownicy.append(p)
-        if not pracownicy:  # Fallback
+                if p not in pracownicy_raw:
+                    pracownicy_raw.append(p)
+        if not pracownicy_raw:  # Fallback
             for plist in pracownicy_config.values():
                 if isinstance(plist, list):
-                    pracownicy.extend(plist)
+                    pracownicy_raw.extend(plist)
     elif isinstance(pracownicy_config, list):
-        pracownicy = list(pracownicy_config)
+        pracownicy_raw = list(pracownicy_config)
+
+    pracownicy = []
+    for item in pracownicy_raw:
+        name = config_manager.get_employee_name(item)
+        if name and name not in pracownicy:
+            pracownicy.append(name)
     
     dzialy_config = config.get("DZIALY", [])
     dzialy = list(dzialy_config.keys()) if isinstance(dzialy_config, dict) else list(dzialy_config)

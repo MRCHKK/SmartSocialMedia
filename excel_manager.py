@@ -74,7 +74,45 @@ def _srednia(gwiazdy):
     return round(sum(s * n for s, n in gwiazdy.items()) / total, 6)
 
 
-def _buduj_dane_lokalizacji(df_lok, dzialy_kolejnosc, aktywne_kategorie):
+def _build_emp_dept_map(config, location_title=None):
+    """
+    Tworzy słownik {imię_i_nazwisko: dzial} dla pracowników w wybranej lokalizacji.
+    """
+    pracownicy_config = config.get("PRACOWNICY", {})
+    lokalizacje_config = config.get("LOKALIZACJE", {})
+
+    emp_map = {}
+    target_loc_id = None
+    if location_title and isinstance(lokalizacje_config, dict):
+        for loc_id, title in lokalizacje_config.items():
+            if title == location_title or loc_id == location_title:
+                target_loc_id = loc_id
+                break
+
+    def add_emp_items(emp_list):
+        if not isinstance(emp_list, list):
+            return
+        for item in emp_list:
+            name = config_manager.get_employee_name(item)
+            dept = config_manager.get_employee_department(item, default=None)
+            if name and dept:
+                emp_map[name] = dept
+
+    if isinstance(pracownicy_config, dict):
+        if "global" in pracownicy_config:
+            add_emp_items(pracownicy_config["global"])
+        if target_loc_id and target_loc_id in pracownicy_config:
+            add_emp_items(pracownicy_config[target_loc_id])
+        elif not target_loc_id:
+            for loc_id, emp_list in pracownicy_config.items():
+                add_emp_items(emp_list)
+    elif isinstance(pracownicy_config, list):
+        add_emp_items(pracownicy_config)
+
+    return emp_map
+
+
+def _buduj_dane_lokalizacji(df_lok, dzialy_kolejnosc, aktywne_kategorie, emp_dept_map=None):
     """
     Dla slice'a df jednej lokalizacji zwraca strukturę:
     {
@@ -82,10 +120,15 @@ def _buduj_dane_lokalizacji(df_lok, dzialy_kolejnosc, aktywne_kategorie):
         "dzialy": { "NAZWA DZIAŁU": {5:n,...}, ... }
     }
     Działy w kolejności z config + te które wystąpiły w danych i są aktywne.
+    Mapuje opinie z imionami pracowników do odpowiadających im działów.
     """
-    # Kopia df_lok by bezpiecznie modyfikować Kategorie nieaktywne na Ogólne
     df_lok = df_lok.copy()
+    emp_dept_map = emp_dept_map or {}
+
     if not df_lok.empty:
+        # Zamień imiona pracowników na przypisany im dział
+        df_lok["Kategoria"] = df_lok["Kategoria"].map(lambda k: emp_dept_map.get(k, k))
+        # Zamień nieaktywne lub niezmapowane kategorie na "Ogólne"
         df_lok.loc[~df_lok["Kategoria"].isin(aktywne_kategorie), "Kategoria"] = "Ogólne"
 
     gwiazdy_suma = _licz_gwiazdy(df_lok)
@@ -331,10 +374,8 @@ def generuj_zestawienie(date_range=None, wizytowki_dane=None):
     dzialy_config = config.get("DZIALY", [])
     dzialy_kolejnosc = list(dzialy_config.keys()) if isinstance(dzialy_config, dict) else list(dzialy_config)
 
-    # Aktywne kategorie (by nie wyświetlać usuniętych pracowników/działów w osobnym wierszu)
-    pracownicy_config = config.get("PRACOWNICY", [])
-    pracownicy_lista = list(pracownicy_config.keys()) if isinstance(pracownicy_config, dict) else list(pracownicy_config)
-    aktywne_kategorie = set(pracownicy_lista + dzialy_kolejnosc + ["Ogólne"])
+    # Aktywne kategorie (by nie wyświetlać nieaktywnych działów w osobnym wierszu)
+    aktywne_kategorie = set(dzialy_kolejnosc + ["Ogólne"])
 
     wizytowki_dane = wizytowki_dane or {}
 
@@ -409,9 +450,8 @@ def generuj_zestawienie(date_range=None, wizytowki_dane=None):
             for lokalizacja in lokalizacje_kolejnosc:
                 df_lok = df_mies[df_mies["Lokalizacja"] == lokalizacja]
 
-                # pomiń jeśli brak danych (opcjonalne – można też pokazywać pusty blok)
-                # W obecnym pliku wszystkie lokalizacje są zawsze pokazywane:
-                dane = _buduj_dane_lokalizacji(df_lok, dzialy_kolejnosc, aktywne_kategorie)
+                emp_map = _build_emp_dept_map(config, lokalizacja)
+                dane = _buduj_dane_lokalizacji(df_lok, dzialy_kolejnosc, aktywne_kategorie, emp_map)
 
                 # priorytet: dane przekazane z zewnątrz, potem skumulowane z bazy CSV do danego miesiąca, na końcu placeholder
                 info = wizytowki_dane.get(lokalizacja) or statystyki_do_miesiaca.get(lokalizacja, {})

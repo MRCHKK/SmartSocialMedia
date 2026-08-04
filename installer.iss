@@ -1,6 +1,6 @@
 [Setup]
 AppName=SmartSocialMedia
-AppVersion=3.0
+AppVersion=3.9
 DefaultDirName={autopf}\SmartSocialMedia
 DefaultGroupName=SmartSocialMedia
 OutputDir=C:\PROGRAMOWANIE\SmartSocialMedia\installer
