@@ -21,8 +21,6 @@ a = Analysis(
     datas=[
         # Ikonka aplikacji
         ('assets', 'assets'),
-        # Model AI (offline)
-        ('data/model_zero_shot', 'data/model_zero_shot'),
         # Pliki CustomTkinter (wymagane!)
         *ctk_datas,
     ] + datas_transformers + datas_torch,
