@@ -43,11 +43,11 @@ a = Analysis(
         'openpyxl',
         'openpyxl.styles',
         'openpyxl.chart',
-        # Inne
-        'dateutil',
-        'dateutil.tz',
-        'difflib',
-        'tkcalendar',
+        # Transformers / PyTorch
+        'transformers',
+        'transformers.pipelines',
+        'transformers.models.auto',
+        'transformers.pipelines.zero_shot_classification',
     ] + hiddenimports_transformers + hiddenimports_torch,
     hookspath=[],
     hooksconfig={},

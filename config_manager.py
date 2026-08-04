@@ -57,12 +57,13 @@ DEFAULT_CONFIG = {
             "serwis", "przegląd", "naprawa", "mechanik", "olej", "wymiana oleju", "klocki",
             "tarcze", "awaria", "usterka", "silnik", "zawieszenie", "diagnosta", "stacja kontroli",
             "robocizna", "gwarancja", "geometria", "klimatyzacja", "odgrzybianie", "kasowanie błędów",
-            "serwisant", "warsztat", "filtr oleju", "wymiana kół", "zbieżność"
+            "serwisant", "warsztat", "filtr oleju", "wymiana kół", "zbieżność", "przyjazd"
         ],
         "CZĘŚCI ZAMIENNE": [
             "części zamienne", "części", "akcesoria", "zamiennik", "zamienniki", "filtr",
             "pasek", "świece", "magazyn", "zamówienie części", "opony", "felgi", "wycieraczki",
-            "żarówki", "płyny", "oryginalne części", "katalog części", "dział części"
+            "żarówki", "płyny", "oryginalne części", "katalog części", "dział części", "czujnik",
+            "vin", "towar", "wariant", "część"
         ],
         "SALON": [
             "salon", "sprzedaż", "zakup", "doradca handlowy", "jazda próbna", "nowe auto",
@@ -76,8 +77,7 @@ DEFAULT_CONFIG = {
         ],
         "BLACHARNIA": [
             "blacharnia", "blacharstwo", "lakiernia", "lakiernik", "prostowanie", "zarysowanie",
-            "wgniecenie", "malowanie", "lakier", "blacha", "szpachla", "elementów",
-            "naprawa bezgotówkowa", "auto zastępcze", "spasowanie", "cieniowanie", "zderzak"
+            "wgniecenie", "malowanie", "lakier", "blacha", "szpachla", "spasowanie", "cieniowanie", "zderzak"
         ]
     }
 }
@@ -129,6 +129,27 @@ def load_config():
 
         if isinstance(loaded.get("DZIALY"), dict):
             loaded["DZIALY"] = list(loaded["DZIALY"].keys())
+
+        # Gwarancja że fabryczne pojęcia z DEFAULT_CONFIG zawsze wchodzą do MAPA_DZIALOW
+        # (Nawet jeśli klient ma stary plik config.json, nowe pojęcia z programu automatycznie zostaną połączone)
+        built_in_map = DEFAULT_CONFIG.get("MAPA_DZIALOW", {})
+        user_map = loaded.get("MAPA_DZIALOW", {})
+        if not isinstance(user_map, dict):
+            user_map = {}
+
+        merged_map = {}
+        all_categories = set(list(built_in_map.keys()) + list(user_map.keys()))
+        for cat in all_categories:
+            default_words = built_in_map.get(cat, [])
+            user_words = user_map.get(cat, [])
+            # Scalanie listy bez powtórzeń (zachowując słowa fabryczne + własne słowa użytkownika)
+            combined = list(default_words)
+            for w in user_words:
+                if w not in combined:
+                    combined.append(w)
+            merged_map[cat] = combined
+
+        loaded["MAPA_DZIALOW"] = merged_map
 
         return loaded
     except (json.JSONDecodeError, IOError) as e:

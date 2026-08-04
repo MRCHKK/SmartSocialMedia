@@ -302,24 +302,42 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
     classifier = get_review_model()
     if classifier is not None:
         try:
-            labels_lower = [k.lower() for k in wszystkie_kategorie]
-            neutral_label = "inny temat / ogólna opinia / brak konkretnego działu"
-            candidate_labels = labels_lower + [neutral_label]
-            
+            # Mapowanie nazw kategorii na pełniejsze opisy kontekstowe dla modelu AI
+            opis_kategorii_map = {
+                "serwis": "usługi naprawcze, mechanik, przegląd techniczny, usterka lub serwis samochodu",
+                "części zamienne": "zamawianie części, sprzedaż elementów, akcesoria, czujniki, vin lub części zamienne",
+                "salon": "zakup nowego samochodu, salon sprzedaży, jazda próbna lub doradztwo handlowe",
+                "samochody używane": "zakup lub odkup używanego samochodu, komis lub auto używane",
+                "ubezpieczenia": "polisa ubezpieczeniowa, OC/AC, zniżki lub formalności ubezpieczeniowe",
+                "blacharnia": "naprawa blacharsko-lakiernicza, lakierowanie, usuwanie wgnieceń lub szkoda lakiernicza"
+            }
+
+            candidate_labels = []
+            label_to_kategoria = {}
+
+            for k in wszystkie_kategorie:
+                k_low = k.lower()
+                opis = opis_kategorii_map.get(k_low, f"dział lub pracownik {k}")
+                candidate_labels.append(opis)
+                label_to_kategoria[opis] = k
+
+            neutral_label = "inny ogólny temat / opinia bez odniesienia do konkretnego działu"
+            candidate_labels.append(neutral_label)
+
             result = classifier(
                 tekst,
                 candidate_labels=candidate_labels,
                 multi_label=False,
-                hypothesis_template="W poniższej opinii klient opisuje swoje doświadczenia z obszarem: {}."
+                hypothesis_template="W tej recenzji Google klient salonu/serwisu samochodowego porusza temat dotyczący: {}."
             )
             najlepsza_kategoria_low = result["labels"][0]
             pewnosc = result["scores"][0]
-            
+
             if najlepsza_kategoria_low == neutral_label:
                 _log_review_classification(f"[Zero-Shot AI] Wykryto brak konkretnego działu ({neutral_label}). Zwracam 'Ogólne'.")
                 return "Ogólne"
 
-            najlepsza_kategoria = next((k for k in wszystkie_kategorie if k.lower() == najlepsza_kategoria_low), "Ogólne")
+            najlepsza_kategoria = label_to_kategoria.get(najlepsza_kategoria_low, "Ogólne")
             najlepsza_low = najlepsza_kategoria.lower()
 
             if "samochody używane" in najlepsza_low or "używane" in najlepsza_low:
@@ -330,11 +348,12 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
                     _log_review_classification(f"[Zero-Shot AI] Odrzucono '{najlepsza_kategoria}' - brak wymaganych obu członów (samochód + używany).")
                     return "Ogólne"
 
-            if pewnosc >= 0.89:
+            # Obniżony próg dla wzbogaconego kontekstowo promptu
+            if pewnosc >= 0.70:
                 _log_review_classification(f"[Zero-Shot AI mDeBERTa] AI dopasowało '{najlepsza_kategoria}' na podstawie kontekstu opinii (pewność: {pewnosc:.2f})")
                 return najlepsza_kategoria
             else:
-                _log_review_classification(f"[Zero-Shot AI mDeBERTa] Odrzucono '{najlepsza_kategoria}' (pewność {pewnosc:.2f} < 0.89). Zwracam 'Ogólne'.")
+                _log_review_classification(f"[Zero-Shot AI mDeBERTa] Odrzucono '{najlepsza_kategoria}' (pewność {pewnosc:.2f} < 0.70). Zwracam 'Ogólne'.")
         except Exception as e:
             logger.exception("Błąd podczas klasyfikacji modelem AI. Zwracam 'Ogólne'.")
             
@@ -346,21 +365,35 @@ def wczytaj_istniejace_opinie(csv_path):
     """Wczytuje istniejące opinie z CSV i zwraca słownik {klucz: wiersz}."""
     istniejace = {}
     if not os.path.exists(csv_path):
+        logger.info(f"Plik bazy CSV nie istnieje pod ścieżką: {csv_path}")
         return istniejace
     try:
-        with open(csv_path, mode='r', encoding='utf-8', newline='') as file:
+        with open(csv_path, mode='r', encoding='utf-8', errors='replace', newline='') as file:
             reader = csv.DictReader(file)
+            line_idx = 1
             for row in reader:
-                review_id = row.get('ReviewID', '').strip()
+                line_idx += 1
+                if not isinstance(row, dict):
+                    logger.warning(f"Linia {line_idx} w pliku CSV ma niepoprawną strukturę i została pominięta.")
+                    continue
+                
+                review_id = (row.get('ReviewID') or '').strip()
                 if review_id:
                     istniejace[review_id] = row
                 else:
-                    # Fallback dla starego formatu CSV
-                    klucz_kompozytowy = f"{row.get('Autor', '')}_{row.get('Data', '')}_{row.get('Lokalizacja', '')}"
-                    row['ReviewID'] = ''
-                    istniejace[klucz_kompozytowy] = row
+                    autor = row.get('Autor', '')
+                    data = row.get('Data', '')
+                    lokalizacja = row.get('Lokalizacja', '')
+                    if autor or data or lokalizacja:
+                        klucz_kompozytowy = f"{autor}_{data}_{lokalizacja}"
+                        row['ReviewID'] = klucz_kompozytowy
+                        istniejace[klucz_kompozytowy] = row
+                        logger.debug(f"Linia {line_idx}: Brak pola ReviewID. Utworzono klucz kompozytowy: {klucz_kompozytowy}")
+                    else:
+                        logger.warning(f"Linia {line_idx} w pliku CSV nie zawiera danych opinii. Pomijam.")
+        logger.info(f"Pomyślnie wczytano {len(istniejace)} opinii z pliku CSV: {csv_path}")
     except Exception as e:
-        logger.warning(f"Nie udało się wczytać istniejących opinii: {e}")
+        logger.error(f"Nie udało się wczytać istniejących opinii z {csv_path}: {e}", exc_info=True)
     return istniejace
 
 
@@ -776,10 +809,10 @@ def reklasyfikuj_baze_csv() -> int:
     # Zapisz z powrotem do CSV
     fieldnames = ['Lokalizacja', 'Autor', 'Ocena', 'Data', 'Kategoria', 'Tresc', 'ReviewID']
     with open(csv_path, mode='w', encoding='utf-8', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction='ignore')
         writer.writeheader()
         for row in istniejace.values():
-            writer.writerow(row)
+            writer.writerow({col: row.get(col, '') for col in fieldnames})
 
     logger.info(f"Reklasyfikacja zakończona. Zaktualizowano {zaktualizowane_count} opinii w bazie.")
     return zaktualizowane_count

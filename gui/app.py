@@ -21,22 +21,32 @@ class App(ctk.CTk):
         self.grid_columnconfigure(0, weight=0, minsize=240)
         self.grid_columnconfigure(1, weight=1)
 
-        # Tworzenie paska bocznego
+        import logging
+        logger = logging.getLogger("App")
+        logger.info("Inicjalizowanie pasku bocznego...")
         self._build_sidebar()
 
-        # Ramka (Kontener) przechowująca różne widoki
+        logger.info("Inicjalizowanie ramki zawartości...")
         self.content_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.content_frame.grid(row=0, column=1, sticky="nsew", padx=15, pady=15)
         
-        # Inicjalizacja wszystkich widoków aplikacji
+        logger.info("Tworzenie widoku MainView...")
+        v_main = MainView(master=self.content_frame, app_root=self)
+        logger.info("Tworzenie widoku ReviewsView...")
+        v_reviews = ReviewsView(master=self.content_frame)
+        logger.info("Tworzenie widoku SheetsView...")
+        v_sheets = SheetsView(master=self.content_frame, app_root=self)
+        logger.info("Tworzenie widoku SettingsView...")
+        v_settings = SettingsView(master=self.content_frame)
+
         self.views = {
-            "main": MainView(master=self.content_frame, app_root=self),
-            "reviews": ReviewsView(master=self.content_frame),
-            "sheets": SheetsView(master=self.content_frame, app_root=self),
-            "settings": SettingsView(master=self.content_frame)
+            "main": v_main,
+            "reviews": v_reviews,
+            "sheets": v_sheets,
+            "settings": v_settings
         }
 
-        # Ustawiamy domyślny widok
+        logger.info("Pokazywanie domyślnego widoku 'main'...")
         self.show_view("main")
         
         # Uruchom automatyczne odpytywanie Google API co 5 minut (300 000 ms)
@@ -44,6 +54,9 @@ class App(ctk.CTk):
         
         # Sprawdzenie aktualizacji 2 sekundy po uruchomieniu
         self.after(2000, self._check_updates_startup)
+        
+        # Automatyczne upewnienie się, że lokalny model AI jest pobrany
+        self.after(1000, self._ensure_ai_model_downloaded)
 
     def _build_sidebar(self):
         self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="#1e2226")
@@ -185,3 +198,65 @@ class App(ctk.CTk):
                     self.after(0, show_popup)
 
         threading.Thread(target=task, daemon=True).start()
+
+    def _ensure_ai_model_downloaded(self):
+        import os
+        import threading
+        model_dir = os.path.join("data", "model_zero_shot")
+        
+        # Sprawdzamy czy model fizycznie istnieje
+        if os.path.exists(model_dir) and os.path.exists(os.path.join(model_dir, "model.safetensors")):
+            return
+
+        def show_dialog():
+            try:
+                # Okno z informacją o pobieraniu składników AI
+                dialog = ctk.CTkToplevel(self)
+                dialog.title("Inicjalizacja Modułu AI")
+                dialog.geometry("450x200")
+                dialog.resizable(False, False)
+                
+                title_lbl = ctk.CTkLabel(
+                    dialog, 
+                    text="🤖 Pobieranie lokalnego silnika AI...", 
+                    font=("Arial", 16, "bold"),
+                    text_color="#5cbaf0"
+                )
+                title_lbl.pack(pady=(25, 10))
+
+                info_lbl = ctk.CTkLabel(
+                    dialog, 
+                    text="Przy pierwszym uruchomieniu pobieramy model AI (~500 MB).\nProszę czekać, to potrwa chwilę...", 
+                    font=("Arial", 12),
+                    text_color="#cccccc"
+                )
+                info_lbl.pack(pady=(0, 15))
+
+                progress = ctk.CTkProgressBar(dialog, width=360, mode="indeterminate")
+                progress.pack(pady=10)
+                progress.start()
+
+                def download_task():
+                    try:
+                        import logging
+                        from huggingface_hub import snapshot_download
+                        model_name = "MoritzLaurer/mDeBERTa-v3-base-mnli-xnli"
+                        os.makedirs(model_dir, exist_ok=True)
+                        logging.getLogger(__name__).info("Pobieranie plików modelu z HuggingFace...")
+                        snapshot_download(repo_id=model_name, local_dir=model_dir)
+                        logging.getLogger(__name__).info("Sukces! Pobrano pliki modelu AI.")
+                    except Exception as e:
+                        import logging
+                        logging.getLogger(__name__).error(f"Błąd pobierania modelu AI: {e}", exc_info=True)
+                    finally:
+                        if dialog.winfo_exists():
+                            self.after(0, dialog.destroy)
+
+                threading.Thread(target=download_task, daemon=True).start()
+            except Exception as ex:
+                import logging
+                logging.getLogger(__name__).error(f"Błąd podczas tworzenia okna pobierania AI: {ex}")
+
+        # Odrocz tworzenie okienka dialogowego o 1000ms po uruchomieniu okna głównego
+        self.after(1000, show_dialog)
+
