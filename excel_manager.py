@@ -36,6 +36,11 @@ def _thin_border():
     return Border(left=s, right=s, top=s, bottom=s)
 
 
+def _medium_border():
+    s = Side(style="medium", color="000000")
+    return Border(left=s, right=s, top=s, bottom=s)
+
+
 def _center(ws, cell_ref):
     ws[cell_ref].alignment = Alignment(horizontal="center", vertical="center")
 
@@ -126,13 +131,55 @@ def _zapisz_blok_lokalizacji(ws, start_row, lokalizacja_nazwa, miesiac_label,
     COL_LACZNA  = 11  # K
     COL_SREDNIA_WIZ = 12  # L
 
-    border = _thin_border()
+    border_thin = _thin_border()
+    border_medium = _medium_border()
+    
+    col_colors = {
+        COL_5: "63be7b",  # ciemny zielony
+        COL_4: "b1d580",  # standardowy zielony
+        COL_3: "ffeb84",  # żółty
+        COL_2: "fbaa77",  # pomarańczowy
+        COL_1: "f8696b"   # krwisty czerwony
+    }
+
+    col_fonts = {
+        COL_5: Font(name="Arial", size=10, color="000000"),
+        COL_4: Font(name="Arial", size=10, color="000000"),
+        COL_3: Font(name="Arial", size=10, color="000000"),
+        COL_2: Font(name="Arial", size=10, color="000000"),
+        COL_1: Font(name="Arial", size=10, color="000000")
+    }
+
+    col_fonts_bold = {
+        COL_5: Font(name="Arial", bold=True, size=10, color="000000"),
+        COL_4: Font(name="Arial", bold=True, size=10, color="000000"),
+        COL_3: Font(name="Arial", bold=True, size=10, color="000000"),
+        COL_2: Font(name="Arial", bold=True, size=10, color="000000"),
+        COL_1: Font(name="Arial", bold=True, size=10, color="000000")
+    }
+
+    col_fonts_header = {
+        COL_5: Font(name="Arial", bold=True, size=9, color="000000"),
+        COL_4: Font(name="Arial", bold=True, size=9, color="000000"),
+        COL_3: Font(name="Arial", bold=True, size=9, color="000000"),
+        COL_2: Font(name="Arial", bold=True, size=9, color="000000"),
+        COL_1: Font(name="Arial", bold=True, size=9, color="000000")
+    }
+
+    def get_border(col):
+        if col in (COL_5, COL_4, COL_3, COL_2, COL_1, COL_SUMA, COL_SREDNIA, COL_LACZNA, COL_SREDNIA_WIZ):
+            return border_medium
+        return border_thin
+
     align_center = Alignment(horizontal="center", vertical="center")
     align_left   = Alignment(horizontal="left",   vertical="center")
 
     row = start_row
 
-    # ── wiersz 1: nazwa lokalizacji ──────────────────────────────────────────
+    # ── wiersz 1: nazwa lokalizacji (B–I połączone) ─────────────────────────
+    ws.merge_cells(start_row=row, start_column=COL_LABEL, end_row=row, end_column=COL_SREDNIA)
+    for c in range(COL_LABEL, COL_SREDNIA + 1):
+        ws.cell(row=row, column=c).fill = _fill(COLOR_LOCATION_NAME)
     _set_cell(ws, row, COL_LABEL, lokalizacja_nazwa,
               font=FONT_BOLD,
               fill=_fill(COLOR_LOCATION_NAME),
@@ -141,17 +188,17 @@ def _zapisz_blok_lokalizacji(ws, start_row, lokalizacja_nazwa, miesiac_label,
 
     # ── wiersz 2: nagłówek kolumn ────────────────────────────────────────────
     header_font = Font(name="Arial", bold=True, size=9)
-    _set_cell(ws, row, COL_LABEL,    miesiac_label,  font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=border)
+    _set_cell(ws, row, COL_LABEL,    miesiac_label,  font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=get_border(COL_LABEL))
     for col, val in [(COL_5, 5), (COL_4, 4), (COL_3, 3), (COL_2, 2), (COL_1, 1)]:
-        _set_cell(ws, row, col, val, font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=border)
-    _set_cell(ws, row, COL_SUMA,    "SUMA",    font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=border)
-    _set_cell(ws, row, COL_SREDNIA, "ŚREDNIA", font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=border)
+        _set_cell(ws, row, col, val, font=col_fonts_header[col], fill=_fill(col_colors[col]), alignment=align_center, border=get_border(col))
+    _set_cell(ws, row, COL_SUMA,    "SUMA",    font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=get_border(COL_SUMA))
+    _set_cell(ws, row, COL_SREDNIA, "ŚREDNIA", font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=get_border(COL_SREDNIA))
 
     # prawa sekcja – tylko w nagłówku
     _set_cell(ws, row, COL_LACZNA,      "Łączna liczba opinii wizytówki",
-              font=header_font, fill=_fill(COLOR_SUMMARY_HEADER), alignment=align_center, border=border)
+              font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=get_border(COL_LACZNA))
     _set_cell(ws, row, COL_SREDNIA_WIZ, "Średnia ocen",
-              font=header_font, fill=_fill(COLOR_SUMMARY_HEADER), alignment=align_center, border=border)
+              font=header_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=get_border(COL_SREDNIA_WIZ))
     row += 1
 
     # ── wiersz 3: SUMA OPINII ────────────────────────────────────────────────
@@ -160,19 +207,19 @@ def _zapisz_blok_lokalizacji(ws, start_row, lokalizacja_nazwa, miesiac_label,
     total = sum(gw.values())
     srednia = _srednia(gw)
 
-    _set_cell(ws, row, COL_LABEL, "SUMA OPINII", font=suma_font, fill=_fill(COLOR_SUMA_ROW), alignment=align_left, border=border)
+    _set_cell(ws, row, COL_LABEL, "SUMA OPINII", font=suma_font, fill=_fill(COLOR_SUMA_ROW), alignment=align_left, border=get_border(COL_LABEL))
     for col, star in [(COL_5, 5), (COL_4, 4), (COL_3, 3), (COL_2, 2), (COL_1, 1)]:
         v = gw[star] if gw[star] > 0 else 0
-        _set_cell(ws, row, col, v if v > 0 else 0, font=FONT_NORMAL, fill=_fill(COLOR_SUMA_ROW), alignment=align_center, border=border)
-    _set_cell(ws, row, COL_SUMA,    total,   font=suma_font, fill=_fill(COLOR_SUMA_ROW), alignment=align_center, border=border)
+        _set_cell(ws, row, col, v, font=col_fonts_bold[col], fill=_fill(col_colors[col]), alignment=align_center, border=get_border(col))
+    _set_cell(ws, row, COL_SUMA,    total,   font=suma_font, fill=_fill(COLOR_SUMA_ROW), alignment=align_center, border=get_border(COL_SUMA))
     _set_cell(ws, row, COL_SREDNIA, round(srednia, 6) if srednia else None,
-              font=suma_font, fill=_fill(COLOR_SUMA_ROW), alignment=align_center, border=border)
+              font=suma_font, fill=_fill(COLOR_SUMA_ROW), alignment=align_center, border=get_border(COL_SREDNIA))
 
     # placeholder lub dane z zewnątrz
     _set_cell(ws, row, COL_LACZNA,      laczna_liczba,
-              font=suma_font, fill=_fill(COLOR_SUMMARY_DATA), alignment=align_center, border=border)
+              font=suma_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=get_border(COL_LACZNA))
     _set_cell(ws, row, COL_SREDNIA_WIZ, srednia_wizytwki,
-              font=suma_font, fill=_fill(COLOR_SUMMARY_DATA), alignment=align_center, border=border)
+              font=suma_font, fill=_fill(COLOR_TABLE_HEADER), alignment=align_center, border=get_border(COL_SREDNIA_WIZ))
     row += 1
 
     # ── wiersze działów ──────────────────────────────────────────────────────
@@ -180,13 +227,13 @@ def _zapisz_blok_lokalizacji(ws, start_row, lokalizacja_nazwa, miesiac_label,
         d_total = sum(dzial_gw.values())
         d_srednia = _srednia(dzial_gw)
 
-        _set_cell(ws, row, COL_LABEL, dzial_nazwa, font=FONT_NORMAL, fill=_fill(COLOR_DZIAL_ROW), alignment=align_left, border=border)
+        _set_cell(ws, row, COL_LABEL, dzial_nazwa, font=FONT_NORMAL, fill=_fill(COLOR_DZIAL_ROW), alignment=align_left, border=get_border(COL_LABEL))
         for col, star in [(COL_5, 5), (COL_4, 4), (COL_3, 3), (COL_2, 2), (COL_1, 1)]:
             v = dzial_gw[star]
-            _set_cell(ws, row, col, v if v > 0 else None, font=FONT_NORMAL, fill=_fill(COLOR_DZIAL_ROW), alignment=align_center, border=border)
-        _set_cell(ws, row, COL_SUMA,    d_total,  font=FONT_NORMAL, fill=_fill(COLOR_DZIAL_ROW), alignment=align_center, border=border)
+            _set_cell(ws, row, col, v if v > 0 else None, font=col_fonts[col], fill=_fill(col_colors[col]), alignment=align_center, border=get_border(col))
+        _set_cell(ws, row, COL_SUMA,    d_total,  font=FONT_NORMAL, fill=_fill(COLOR_DZIAL_ROW), alignment=align_center, border=get_border(COL_SUMA))
         _set_cell(ws, row, COL_SREDNIA, round(d_srednia, 6) if d_srednia else None,
-                  font=FONT_NORMAL, fill=_fill(COLOR_DZIAL_ROW), alignment=align_center, border=border)
+                  font=FONT_NORMAL, fill=_fill(COLOR_DZIAL_ROW), alignment=align_center, border=get_border(COL_SREDNIA))
         row += 1
 
     # ── pusta linia separatora ───────────────────────────────────────────────
@@ -207,20 +254,23 @@ def _zapisz_naglowek_roku(ws, row, rok):
 
 
 def _zapisz_naglowek_miesiaca(ws, row, miesiac_nazwa):
-    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=3)
-    for col in range(1, 4):
-        ws.cell(row=row, column=col).fill = _fill(COLOR_MONTH_HEADER)
-    ws.cell(row=row, column=1, value=miesiac_nazwa).font = Font(name="Arial", bold=True, size=12, color="FFFFFF")
+    ws.merge_cells(start_row=row, start_column=1, end_row=row+1, end_column=3)
+    fill_yellow = _fill("FFE699")  # ciepły pastelowy żółty
+    for r in range(row, row+2):
+        for col in range(1, 4):
+            ws.cell(row=r, column=col).fill = fill_yellow
+    ws.cell(row=row, column=1, value=miesiac_nazwa.upper()).font = Font(name="Arial", bold=True, size=14, color="000000")
     ws.cell(row=row, column=1).alignment = Alignment(horizontal="left", vertical="center")
-    ws.row_dimensions[row].height = 20
-    return row + 2  # miesiąc + pusta linia
+    ws.row_dimensions[row].height = 18
+    ws.row_dimensions[row+1].height = 18
+    return row + 3  # nagłówek miesiąca (2 wiersze) + pusta linia
 
 
 # ── ustawienia arkusza ───────────────────────────────────────────────────────
 
 def _ustaw_wymiary_kolumn(ws):
     ws.column_dimensions["A"].width = 6
-    ws.column_dimensions["B"].width = 38
+    ws.column_dimensions["B"].width = 52  # poszerzona
     ws.column_dimensions["C"].width = 6   # 5★
     ws.column_dimensions["D"].width = 6   # 4★
     ws.column_dimensions["E"].width = 6   # 3★

@@ -12,6 +12,7 @@ import threading
 import difflib
 from dateutil import parser, tz
 
+
 try:
     from plyer import notification
 except ImportError:
@@ -84,16 +85,14 @@ def pobierz_rdzen(slowo: str) -> str:
     slowo = usun_diakrytyki(slowo.lower().strip())
     if len(slowo) <= 3:
         return slowo
-    # Końcówki przymiotnikowe/nazwiskowe -ski, -cki, -ska, -cka
+    # Typowe obcinanie końcówek deklinacyjnych i przymiotnikowych
     if slowo.endswith(("skiego", "ckiego", "skiemu", "ckiemu")):
-        slowo = slowo[:-6]
-    elif slowo.endswith(("ski", "cki", "ska", "cka")):
-        slowo = slowo[:-3]
-    elif slowo.endswith(("skim", "ckim", "skich", "ckich")):
-        slowo = slowo[:-4]
-
-    # Typowe obcinanie końcówek deklinacyjnych
-    if slowo.endswith(("ia", "ie", "io", "ii", "ia")):
+        return slowo[:-6]
+    if slowo.endswith(("skim", "ckim", "skich", "ckich")):
+        return slowo[:-4]
+    if slowo.endswith(("ski", "cki", "ska", "cka", "ego", "emu", "ych", "ymi")):
+        return slowo[:-3]
+    if slowo.endswith(("ia", "ie", "io", "ii")):
         return slowo[:-2]
     if slowo.endswith(("a", "u", "y", "e", "o", "i", "m")):
         return slowo[:-1]
@@ -127,6 +126,94 @@ def _log_review_classification(message: str):
     except Exception:
         pass
 
+_review_pipeline = None
+_review_model_loaded = False
+
+def get_review_model():
+    global _review_pipeline, _review_model_loaded
+    if not _review_model_loaded:
+        try:
+            from transformers import pipeline
+            import torch
+            
+            # Bezpieczny limit wątków CPU dla słabszych procesorów, by nie przeciążać komputera
+            if hasattr(torch, "set_num_threads"):
+                try:
+                    torch.set_num_threads(2)
+                except Exception:
+                    pass
+
+            model_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'model_zero_shot')
+            if os.path.exists(model_dir):
+                # Ładowanie całkowicie offline z pobranego folderu
+                os.environ["HF_HUB_OFFLINE"] = "1"
+                _review_pipeline = pipeline("zero-shot-classification", model=model_dir)
+            else:
+                # Fallback do pobrania (tylko w trybie dev przed zbudowaniem)
+                _review_pipeline = pipeline("zero-shot-classification", model="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli")
+        except (Exception, MemoryError) as e:
+            logger.error(f"Nie udało się zainicjować modelu mDeBERTa-v3-base: {e}")
+            _review_pipeline = None
+        _review_model_loaded = True
+    return _review_pipeline
+
+def _dopasuj_pracownika(tekst: str, pracownicy: list) -> str:
+    """Sprawdza dopasowanie pracownika z uwzględnieniem deklinacji i oboczności nazwisk."""
+    if not tekst or not pracownicy:
+        return None
+
+    tekst_lower = str(tekst).lower()
+    tekst_clean = usun_diakrytyki(tekst_lower)
+    slowa_tekstu_raw = [w for w in re.findall(r'\w+', tekst_clean) if len(w) >= 3]
+    slowa_tekstu_rdzen = [pobierz_rdzen(w) for w in slowa_tekstu_raw]
+
+    # 1. Pełne dopasowanie tekstu z imieniem i nazwiskiem
+    for p in pracownicy:
+        p_lower = p.lower()
+        if p_lower in tekst_lower or usun_diakrytyki(p_lower) in tekst_clean:
+            return p
+
+    # 2. Dopasowanie po poszczególnych członach (imię / nazwisko z odmianą)
+    for p in pracownicy:
+        czlony = p.split()
+        for czlon in czlony:
+            czlon_clean = usun_diakrytyki(czlon.lower())
+            if len(czlon_clean) <= 3:
+                continue
+            rdzen_czlonu = pobierz_rdzen(czlon_clean)
+
+            # Dokładne dopasowanie rdzeniowe (np. kowalsk == kowalsk, mariusz == mariusz, cielemec == cielemec)
+            if rdzen_czlonu in slowa_tekstu_rdzen:
+                return p
+
+            # Fuzzy matching dla oboczności (np. Rostka -> Rostek)
+            for w_raw, w_rdzen in zip(slowa_tekstu_raw, slowa_tekstu_rdzen):
+                if len(w_raw) >= 4 and len(czlon_clean) >= 4:
+                    ratio1 = difflib.SequenceMatcher(None, czlon_clean, w_raw).ratio()
+                    ratio2 = difflib.SequenceMatcher(None, rdzen_czlonu, w_rdzen).ratio()
+                    if ratio1 >= 0.78 or ratio2 >= 0.78:
+                        return p
+    return None
+
+def _matches_keyword(tekst_lower: str, keyword: str) -> bool:
+    """Sprawdza czy słowo kluczowe/pojęcie z mapy myśli występuje w tekście opinii."""
+    kw_lower = keyword.lower().strip()
+    if not kw_lower:
+        return False
+    if "/" in kw_lower or "-" in kw_lower or " " in kw_lower:
+        return kw_lower in tekst_lower
+    
+    # Podstawowe sprawdzanie z ograniczeniem słów
+    pattern = r'(?<!\w)' + re.escape(kw_lower) + r'(?!\w)'
+    if re.search(pattern, tekst_lower):
+        return True
+
+    # Sprawdzanie rdzeniowe tylko dla słów o długości >= 4
+    if len(kw_lower) >= 4:
+        rdzen_kw = pobierz_rdzen(usun_diakrytyki(kw_lower))
+        slowa_tekstu = [pobierz_rdzen(usun_diakrytyki(w)) for w in re.findall(r'\w+', tekst_lower) if len(w) >= 4]
+        return rdzen_kw in slowa_tekstu
+    return False
 
 def przypisz_kategorie(tekst, location_id=None, config=None):
     # Backward compatibility with tests/calls that pass config as the second parameter
@@ -137,122 +224,122 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
     if config is None:
         config = config_manager.load_config()
 
-    if not tekst:
+    if not tekst or not str(tekst).strip():
         return "Ogólne"
 
-    # Rozbijamy tekst opinii na słowa i oczyszczamy je z diakrytyków
-    slowa_surowe = re.findall(r'\b\w+\b', tekst.lower())
-    if not slowa_surowe:
-        return "Ogólne"
-
-    slowa_norm = [usun_diakrytyki(w) for w in slowa_surowe]
-    slowa_rdzenie = [pobierz_rdzen(w) for w in slowa_surowe]
-
-    # PRIORYTET 1 (Pracownicy - czysta lista per lokalizacja)
+    # Przygotowanie wszystkich dostępnych kategorii z ustawień
     pracownicy_config = config.get("PRACOWNICY", {})
     pracownicy = []
-    
     if isinstance(pracownicy_config, dict):
         if location_id and location_id in pracownicy_config:
-            pracownicy = list(pracownicy_config[location_id])
-            # Dołącz pracowników globalnych do puli dopasowania dla tej lokalizacji
-            if "global" in pracownicy_config:
-                for p in pracownicy_config["global"]:
-                    if p not in pracownicy:
-                        pracownicy.append(p)
-        elif "global" in pracownicy_config:
-            pracownicy = pracownicy_config["global"]
-        else:
-            # Fallback — połącz wszystkich pracowników z różnych lokalizacji
+            pracownicy.extend(pracownicy_config[location_id])
+        if "global" in pracownicy_config:
+            for p in pracownicy_config["global"]:
+                if p not in pracownicy:
+                    pracownicy.append(p)
+        if not pracownicy:  # Fallback
             for plist in pracownicy_config.values():
                 if isinstance(plist, list):
                     pracownicy.extend(plist)
-            pracownicy = list(set(pracownicy))
     elif isinstance(pracownicy_config, list):
-        pracownicy = pracownicy_config
+        pracownicy = list(pracownicy_config)
+    
+    dzialy_config = config.get("DZIALY", [])
+    dzialy = list(dzialy_config.keys()) if isinstance(dzialy_config, dict) else list(dzialy_config)
 
-    for pracownik in pracownicy:
-        czlony = pracownik.lower().split()
-        for czlon in czlony:
-            if len(czlon) > 2:
-                czlon_norm = usun_diakrytyki(czlon)
-                czlon_rdzen = pobierz_rdzen(czlon)
+    wszystkie_kategorie = list(set(pracownicy + dzialy))
 
-                # 1. Krok: Dopasowanie rdzeniowe / podciągu (bardzo precyzyjne)
-                dopasowanie_rdzen = False
-                matching_word = ""
-                for w_norm, w_rdzen in zip(slowa_norm, slowa_rdzenie):
-                    # Jeśli rdzeń imienia/nazwiska pasuje do rdzenia słowa w opinii
-                    if czlon_rdzen == w_rdzen or w_norm.startswith(czlon_rdzen):
-                        dopasowanie_rdzen = True
-                        matching_word = w_norm
-                        break
-                
-                if dopasowanie_rdzen:
-                    _log_review_classification(f"[Klasyfikacja] Dopasowano pracownika '{pracownik}' przez słowo '{matching_word}' w opinii (metoda: rdzeń '{czlon_rdzen}')")
-                    return pracownik
+    if not wszystkie_kategorie:
+        return "Ogólne"
 
-                # 2. Krok: Fuzzy fallback
-                cutoff_val = 0.85 if len(czlon_norm) <= 4 else 0.75
-                matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=cutoff_val)
-                if matches:
-                    _log_review_classification(f"[Klasyfikacja] Dopasowano pracownika '{pracownik}' przez słowo '{matches[0]}' w opinii (metoda: fuzzy '{czlon_norm}' -> '{matches[0]}')")
-                    return pracownik
+    tekst_lower = str(tekst).lower()
 
-    # PRIORYTET 2 (Działy - czysta lista)
-    dzialy = config.get("DZIALY", [])
-    if isinstance(dzialy, dict):
-        dzialy = list(dzialy.keys())
+    # --- KROK 1: SZTYWNE ALGORYTMY (Litera w literę) ---
+    # 1. Dokładne dopasowanie imienia/nazwiska pracownika
+    dopasowany_pracownik = _dopasuj_pracownika(tekst, pracownicy)
+    if dopasowany_pracownik:
+        _log_review_classification(f"[Sztywne dopasowanie] Dopasowano pracownika: '{dopasowany_pracownik}'")
+        return dopasowany_pracownik
 
-    for dzial in dzialy:
-        # Obsługa aliasów zdefiniowanych jako wartości w dict (jeśli config ma taką strukturę)
-        dzialy_config = config.get("DZIALY", {})
-        synonimy = []
-        if isinstance(dzialy_config, dict):
-            synonimy = dzialy_config.get(dzial, [])
-            if isinstance(synonimy, str):
-                synonimy = [synonimy]
+    # 2. Dokładne dopasowanie nazwy działu (litera w literę)
+    for d in dzialy:
+        d_lower = d.lower()
+        if " " in d_lower:
+            czlony_d = [pobierz_rdzen(usun_diakrytyki(w)) for w in d_lower.split() if len(w) >= 3]
+            slowa_t = [pobierz_rdzen(usun_diakrytyki(w)) for w in re.findall(r'\w+', tekst_lower)]
+            if czlony_d and all(c in slowa_t for c in czlony_d):
+                _log_review_classification(f"[Sztywne dopasowanie] Dopasowano wielowyrazowy dział: '{d}'")
+                return d
+        else:
+            if _matches_keyword(tekst_lower, d_lower):
+                _log_review_classification(f"[Sztywne dopasowanie] Dopasowano nazwę działu: '{d}'")
+                return d
 
-        # Szukamy zarówno po pełnej nazwie działu, jak i po jego członach / aliasach
-        wyszukiwane_frazy = [dzial] + synonimy
-        for fraza in wyszukiwane_frazy:
-            czlony = [c for c in fraza.lower().split() if len(c) > 2]
-            if not czlony:
+    # --- KROK 2: MAPA MYŚLI (Pojęcia i Słowa Kluczowe Działów) ---
+    mapa_dzialow = config.get("MAPA_DZIALOW", {})
+    if isinstance(mapa_dzialow, dict):
+        znalezione_z_mapy = []
+        for dzial_nazwa, slowa_kluczowe in mapa_dzialow.items():
+            if dzialy and dzial_nazwa.upper() not in [d.upper() for d in dzialy]:
                 continue
-                
-            pasuje_cala_fraza = True
-            log_details = []
-            
-            for czlon in czlony:
-                czlon_norm = usun_diakrytyki(czlon)
-                czlon_rdzen = pobierz_rdzen(czlon)
-                
-                dopasowano_czlon = False
-                
-                # 1. Krok: Dopasowanie rdzeniowe / podciągu
-                for w_norm, w_rdzen in zip(slowa_norm, slowa_rdzenie):
-                    if czlon_rdzen == w_rdzen or w_norm.startswith(czlon_rdzen):
-                        dopasowano_czlon = True
-                        log_details.append(f"rdzen '{czlon_rdzen}' -> '{w_norm}'")
-                        break
-                        
-                # 2. Krok: Fuzzy fallback
-                if not dopasowano_czlon:
-                    cutoff_val = 0.85 if len(czlon_norm) <= 4 else 0.75
-                    matches = difflib.get_close_matches(czlon_norm, slowa_norm, n=1, cutoff=cutoff_val)
-                    if matches:
-                        dopasowano_czlon = True
-                        log_details.append(f"fuzzy '{czlon_norm}' -> '{matches[0]}'")
-                        
-                if not dopasowano_czlon:
-                    pasuje_cala_fraza = False
-                    break
-            
-            if pasuje_cala_fraza:
-                _log_review_classification(f"[Klasyfikacja] Dopasowano dzial '{dzial}' przez fraze '{fraza}' (szczegoly: {', '.join(log_details)})")
-                return dzial
+            for kw in slowa_kluczowe:
+                if _matches_keyword(tekst_lower, kw):
+                    znalezione_z_mapy.append((dzial_nazwa, kw))
+        
+        if znalezione_z_mapy:
+            znalezione_z_mapy.sort(key=lambda x: len(x[1]), reverse=True)
+            wygrywajacy_dzial, pasujace_slowo = znalezione_z_mapy[0]
+            oryg_dzial = next((d for d in dzialy if d.upper() == wygrywajacy_dzial.upper()), wygrywajacy_dzial)
+            _log_review_classification(f"[Mapa Myśli] Dopasowano dział '{oryg_dzial}' na podstawie pojęcia: '{pasujace_slowo}'")
+            return oryg_dzial
 
+    # --- KROK 3: SZTUCZNA INTELIGENCJA AI (mDeBERTa-v3 dla nietypowych opinii) ---
+    use_ai = config.get("USE_AI_MODEL", True)
+    if not use_ai:
+        _log_review_classification("[Konfiguracja] Model AI wyłączony w ustawieniach. Zwracam 'Ogólne'.")
+        return "Ogólne"
+
+    classifier = get_review_model()
+    if classifier is not None:
+        try:
+            labels_lower = [k.lower() for k in wszystkie_kategorie]
+            neutral_label = "inny temat / ogólna opinia / brak konkretnego działu"
+            candidate_labels = labels_lower + [neutral_label]
+            
+            result = classifier(
+                tekst,
+                candidate_labels=candidate_labels,
+                multi_label=False,
+                hypothesis_template="W poniższej opinii klient opisuje swoje doświadczenia z obszarem: {}."
+            )
+            najlepsza_kategoria_low = result["labels"][0]
+            pewnosc = result["scores"][0]
+            
+            if najlepsza_kategoria_low == neutral_label:
+                _log_review_classification(f"[Zero-Shot AI] Wykryto brak konkretnego działu ({neutral_label}). Zwracam 'Ogólne'.")
+                return "Ogólne"
+
+            najlepsza_kategoria = next((k for k in wszystkie_kategorie if k.lower() == najlepsza_kategoria_low), "Ogólne")
+            najlepsza_low = najlepsza_kategoria.lower()
+
+            if "samochody używane" in najlepsza_low or "używane" in najlepsza_low:
+                slowa_t = [pobierz_rdzen(usun_diakrytyki(w)) for w in re.findall(r'\w+', tekst_lower)]
+                has_auto = any(w in slowa_t for w in ["samochod", "auto", "pojazd", "woz"])
+                has_uzywane = any(w in slowa_t for w in ["uzywan", "uzywka", "komis", "odkup", "trade", "bezwypadkow", "przebieg"])
+                if not (has_auto and has_uzywane):
+                    _log_review_classification(f"[Zero-Shot AI] Odrzucono '{najlepsza_kategoria}' - brak wymaganych obu członów (samochód + używany).")
+                    return "Ogólne"
+
+            if pewnosc >= 0.89:
+                _log_review_classification(f"[Zero-Shot AI mDeBERTa] AI dopasowało '{najlepsza_kategoria}' na podstawie kontekstu opinii (pewność: {pewnosc:.2f})")
+                return najlepsza_kategoria
+            else:
+                _log_review_classification(f"[Zero-Shot AI mDeBERTa] Odrzucono '{najlepsza_kategoria}' (pewność {pewnosc:.2f} < 0.89). Zwracam 'Ogólne'.")
+        except Exception as e:
+            logger.exception("Błąd podczas klasyfikacji modelem AI. Zwracam 'Ogólne'.")
+            
     return "Ogólne"
+
 
 
 def wczytaj_istniejace_opinie(csv_path):

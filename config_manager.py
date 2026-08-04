@@ -35,13 +35,51 @@ DEFAULT_CONFIG = {
     "NOTIFICATIONS_ENABLED": True,
 
     # --- Klasyfikacja AI ---
+    "USE_AI_MODEL": True,  # Możliwość wyłączenia ciężkiego modelu na bardzo słabych komputerach
     # Słownik: "accounts/{accountId}/locations/{locationId}" -> ["Imię Nazwisko 1", "Imię Nazwisko 2"]
     "PRACOWNICY": {},
     "DZIALY": [
-        "Serwis",
-        "Malarnia",
-        "Dział handlu"
-    ]
+        "SERWIS",
+        "CZĘŚCI ZAMIENNE",
+        "SALON",
+        "SAMOCHODY UŻYWANE",
+        "UBEZPIECZENIA",
+        "BLACHARNIA"
+    ],
+    "MAPA_DZIALOW": {
+        "UBEZPIECZENIA": [
+            "oc/ac", "oc", "ac", "polisa", "ubezpieczenie", "ubezpieczenia", "ubezpieczyciel",
+            "likwidacja szkód", "szkoda", "szkody", "agent ubezpieczeniowy", "składka", "zniżki",
+            "nnw", "gap", "warta", "pzu", "allianz", "ergo hestia", "generali", "franszyza",
+            "zielona karta", "wariant serwisowy", "kosztorys szkody"
+        ],
+        "SERWIS": [
+            "serwis", "przegląd", "naprawa", "mechanik", "olej", "wymiana oleju", "klocki",
+            "tarcze", "awaria", "usterka", "silnik", "zawieszenie", "diagnosta", "stacja kontroli",
+            "robocizna", "gwarancja", "geometria", "klimatyzacja", "odgrzybianie", "kasowanie błędów",
+            "serwisant", "warsztat", "filtr oleju", "wymiana kół", "zbieżność"
+        ],
+        "CZĘŚCI ZAMIENNE": [
+            "części zamienne", "części", "akcesoria", "zamiennik", "zamienniki", "filtr",
+            "pasek", "świece", "magazyn", "zamówienie części", "opony", "felgi", "wycieraczki",
+            "żarówki", "płyny", "oryginalne części", "katalog części", "dział części"
+        ],
+        "SALON": [
+            "salon", "sprzedaż", "zakup", "doradca handlowy", "jazda próbna", "nowe auto",
+            "nowy samochód", "konfiguracja", "salon samochodowy", "finansowanie", "leasing",
+            "kredyt", "handlowiec", "odbiór auta", "wydanie samochodu", "rabat", "oferta handlowa"
+        ],
+        "SAMOCHODY UŻYWANE": [
+            "samochody używane", "używane", "komis", "odkup", "używka", "stan techniczny",
+            "przebieg", "bezwypadkowy", "autohandel", "trade-in", "zamiana", "wycena auta",
+            "historia pojazdu", "używany samochód", "dział używanych"
+        ],
+        "BLACHARNIA": [
+            "blacharnia", "blacharstwo", "lakiernia", "lakiernik", "prostowanie", "zarysowanie",
+            "wgniecenie", "malowanie", "lakier", "blacha", "szpachla", "elementów",
+            "naprawa bezgotówkowa", "auto zastępcze", "spasowanie", "cieniowanie", "zderzak"
+        ]
+    }
 }
 
 # Klucze które zostały usunięte (stare Places API) — ignoruj podczas wczytywania

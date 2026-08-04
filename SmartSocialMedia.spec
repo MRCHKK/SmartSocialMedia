@@ -3,23 +3,29 @@
 # Uruchom build: py -m PyInstaller SmartSocialMedia.spec
 
 import os
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules, collect_all
 
 block_cipher = None
 
 # Zbierz wszystkie pliki danych CustomTkinter (motywy, czcionki)
 ctk_datas = collect_data_files('customtkinter')
 
+# Zbieranie zależności dla modeli AI
+datas_transformers, binaries_transformers, hiddenimports_transformers = collect_all('transformers')
+datas_torch, binaries_torch, hiddenimports_torch = collect_all('torch')
+
 a = Analysis(
     ['main_gui.py'],
     pathex=[os.getcwd()],
-    binaries=[],
+    binaries=[] + binaries_transformers + binaries_torch,
     datas=[
         # Ikonka aplikacji
         ('assets', 'assets'),
+        # Model AI (offline)
+        ('data/model_zero_shot', 'data/model_zero_shot'),
         # Pliki CustomTkinter (wymagane!)
         *ctk_datas,
-    ],
+    ] + datas_transformers + datas_torch,
     hiddenimports=[
         # Google Auth / OAuth2
         'google.auth',
@@ -44,8 +50,7 @@ a = Analysis(
         'dateutil.tz',
         'difflib',
         'tkcalendar',
-        'babel.numbers',
-    ],
+    ] + hiddenimports_transformers + hiddenimports_torch,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

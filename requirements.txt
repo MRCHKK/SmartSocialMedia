@@ -8,3 +8,7 @@ plyer
 google-auth
 google-auth-oauthlib
 google-api-python-client
+scikit-learn
+joblib
+torch
+transformers

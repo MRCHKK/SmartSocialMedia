@@ -20,3 +20,12 @@ __pycache__/
 .idea/
 venv/
 .env
+
+# Modele AI i pliki tymczasowe/testowe
+data/model_zero_shot/
+*.bak_*
+debug_ai.py
+generate_test_reviews.py
+pobierz_model_lokalnie.py
+przetestuj_model.py
+test_*.py
