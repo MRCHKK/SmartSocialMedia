@@ -1,5 +1,5 @@
 {
-  "version": "3.9",
-  "download_url": "https://github.com/MRCHKK/SmartSocialMedia/releases/download/3.9/SmartSocialMedia.zip",
-  "changelog": "Dodanie przypisywania pracowników do działów w Ustawieniach oraz automatyczne zliczanie ich opinii pod właściwym działem w raporcie Excel."
+  "version": "4.0",
+  "download_url": "https://github.com/MRCHKK/SmartSocialMedia/releases/download/4.0/SmartSocialMedia.zip",
+  "changelog": "Naprawa auto-updatera (logika cachowania i powiadomienia do pliku logs/update_logs.log), nowa nazwa działu 'BEZ WSKAZANIA DZIAŁU' zastępująca 'Ogólne', eliminacja blokad API (rate limit 429) przy włączaniu aplikacji, dodano manualne kasowanie plików Excela."
 }

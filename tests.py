@@ -66,7 +66,7 @@ class TestPrzypisKategorie(unittest.TestCase):
         # Anna Nowak pracuje w test_loc_4, nie powinna zostać dopasowana dla test_loc_3
         self.assertEqual(
             przypisz_kategorie("Bardzo polecam panią Annę Nowak!", "accounts/123/locations/test_loc_3", self.config),
-            "Ogólne"
+            "BEZ WSKAZANIA DZIAŁU"
         )
 
     def test_rozpoznaje_pracownika_globalnego(self):
@@ -91,14 +91,14 @@ class TestPrzypisKategorie(unittest.TestCase):
     def test_brak_kategorii_zwraca_ogolne(self):
         self.assertEqual(
             przypisz_kategorie("Fajne miejsce, polecam", "accounts/123/locations/test_loc_3", self.config),
-            "Ogólne"
+            "BEZ WSKAZANIA DZIAŁU"
         )
 
     def test_pusty_tekst(self):
-        self.assertEqual(przypisz_kategorie("", "accounts/123/locations/test_loc_3", self.config), "Ogólne")
+        self.assertEqual(przypisz_kategorie("", "accounts/123/locations/test_loc_3", self.config), "BEZ WSKAZANIA DZIAŁU")
 
     def test_none_tekst(self):
-        self.assertEqual(przypisz_kategorie(None, "accounts/123/locations/test_loc_3", self.config), "Ogólne")
+        self.assertEqual(przypisz_kategorie(None, "accounts/123/locations/test_loc_3", self.config), "BEZ WSKAZANIA DZIAŁU")
 
     def test_case_insensitive(self):
         self.assertEqual(
@@ -182,9 +182,9 @@ class TestPrzypisKategorie(unittest.TestCase):
             "DZIALY": ["samochody używane"]
         }
         # Tylko "samochód" -> brak dopasowania
-        self.assertEqual(przypisz_kategorie("Kupiłem tam świetny samochód", config_test), "Ogólne")
+        self.assertEqual(przypisz_kategorie("Kupiłem tam świetny samochód", config_test), "BEZ WSKAZANIA DZIAŁU")
         # Tylko "używane" -> brak dopasowania
-        self.assertEqual(przypisz_kategorie("Wszystko było bardzo używane i zniszczone", config_test), "Ogólne")
+        self.assertEqual(przypisz_kategorie("Wszystko było bardzo używane i zniszczone", config_test), "BEZ WSKAZANIA DZIAŁU")
         # Oba człony obecne -> dopasowanie
         self.assertEqual(przypisz_kategorie("Jestem zadowolony z zakupu używanego samochodu", config_test), "samochody używane")
 
@@ -196,7 +196,7 @@ class TestPrzypisKategorie(unittest.TestCase):
                 "DZIALY": ["Serwis"],
                 "USE_AI_MODEL": False
             }),
-            "Ogólne"
+            "BEZ WSKAZANIA DZIAŁU"
         )
         # Słowo "Erykowi" powinno zostać poprawnie dopasowane przez dopasowanie rdzeniowe
         self.assertEqual(
@@ -466,7 +466,7 @@ class TestEmployeeDepartmentMapping(unittest.TestCase):
             {"Ocena": 3, "Kategoria": "SERWIS"}
         ])
 
-        aktywne_kategorie = set(config_test["DZIALY"] + ["Ogólne"])
+        aktywne_kategorie = set(config_test["DZIALY"] + ["BEZ WSKAZANIA DZIAŁU"])
         dane = _buduj_dane_lokalizacji(df_lok, config_test["DZIALY"], aktywne_kategorie, emp_map)
 
         # SERWIS powinien zawierać 2 opinie Jana Kowalskiego + 1 bezpośrednią opinie SERWIS

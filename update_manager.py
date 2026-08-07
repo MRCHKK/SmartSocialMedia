@@ -7,9 +7,20 @@ import subprocess
 import tempfile
 import sys
 
-logger = logging.getLogger(__name__)
+import time
 
-VERSION = "3.9"
+logger = logging.getLogger("updater")
+logger.setLevel(logging.DEBUG)
+
+# Upewnij się, że katalog z logami istnieje
+os.makedirs("logs", exist_ok=True)
+fh = logging.FileHandler("logs/update_logs.log", encoding="utf-8")
+fh.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+fh.setFormatter(formatter)
+logger.addHandler(fh)
+
+VERSION = "4.0"
 DEFAULT_UPDATE_URL = "https://raw.githubusercontent.com/MRCHKK/SmartSocialMedia/refs/heads/main/version.json"
 
 def download_and_install_update(download_url: str) -> bool:
@@ -20,9 +31,15 @@ def download_and_install_update(download_url: str) -> bool:
 
 
     try:
-        print(f"[Self-Updater] Pobieranie aktualizacji z: {download_url}")
-        response = requests.get(download_url, timeout=60, stream=True)
+        # Add cache buster timestamp
+        cache_buster = int(time.time())
+        download_url_with_cache_buster = f"{download_url}?t={cache_buster}"
+        
+        logger.info(f"[Self-Updater] Pobieranie aktualizacji z: {download_url_with_cache_buster}")
+        print(f"[Self-Updater] Pobieranie aktualizacji z: {download_url_with_cache_buster}")
+        response = requests.get(download_url_with_cache_buster, timeout=60, stream=True)
         if response.status_code != 200:
+            logger.error(f"[Self-Updater] Błąd pobierania: HTTP {response.status_code}")
             print(f"[Self-Updater] Błąd pobierania: HTTP {response.status_code}")
             return False
         
@@ -179,15 +196,20 @@ def check_for_updates(update_url: str = DEFAULT_UPDATE_URL) -> dict:
     Sprawdza, czy dostępna jest nowsza wersja aplikacji.
     Zwraca słownik z informacjami o aktualizacji, jeśli jest dostępna, w przeciwnym razie None.
     """
+    logger.info(f"[Update Checker] Sprawdzam aktualizacje pod adresem: {update_url}")
     print(f"[Update Checker] Sprawdzam aktualizacje pod adresem: {update_url}")
     print(f"[Update Checker] Lokalna wersja aplikacji: {VERSION}")
+    logger.info(f"[Update Checker] Lokalna wersja aplikacji: {VERSION}")
     try:
-        response = requests.get(update_url, timeout=5)
+        cache_buster = int(time.time())
+        url_with_cache_buster = f"{update_url}?t={cache_buster}"
+        response = requests.get(url_with_cache_buster, timeout=5)
         print(f"[Update Checker] Status odpowiedzi HTTP: {response.status_code}")
         if response.status_code == 200:
             data = response.json()
             print(f"[Update Checker] Pobrane dane: {data}")
             online_version = data.get("version", "")
+            logger.info(f"[Update Checker] Wersja pobrana z URL: {online_version}")
             download_url = data.get("download_url", "")
             changelog = data.get("changelog", "")
             
@@ -212,6 +234,7 @@ def check_for_updates(update_url: str = DEFAULT_UPDATE_URL) -> dict:
                         "changelog": changelog
                     }
         else:
+            logger.error(f"[Update Checker] Serwer zwrócił status inny niż 200: {response.status_code}")
             print(f"[Update Checker] Serwer zwrócił status inny niż 200: {response.status_code}")
     except Exception as e:
         print(f"[Update Checker] Wyjątek podczas sprawdzania aktualizacji: {e}")

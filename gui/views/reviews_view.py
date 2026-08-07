@@ -38,7 +38,7 @@ class ReviewsView(ctk.CTkFrame):
         self.search_entry.bind("<KeyRelease>", self._filter_data)
 
         self.btn_reload = ctk.CTkButton(
-            header_frame, text="Zaktualizuj widok", width=120, height=35,
+            header_frame, text="Pobierz nowe opinie", width=160, height=35,
             fg_color="#444", hover_color="#333",
             command=self.refresh_data_from_api
         )
@@ -116,6 +116,10 @@ class ReviewsView(ctk.CTkFrame):
             # Obsluga starych wersji
             if 'ReviewID' not in self.df.columns:
                 self.df['ReviewID'] = ''
+            
+            # Dynamiczna naprawa starszych wpisów z "Ogólne"
+            if 'Kategoria' in self.df.columns:
+                self.df['Kategoria'] = self.df['Kategoria'].replace('Ogólne', 'BEZ WSKAZANIA DZIAŁU')
                 
             # Sortowanie po dacie (od najnowszych)
             self.df['Data_dt'] = pd.to_datetime(self.df['Data'], format="%d.%m.%Y %H:%M", errors='coerce')
@@ -140,7 +144,7 @@ class ReviewsView(ctk.CTkFrame):
         threading.Thread(target=task, daemon=True).start()
 
     def _on_refresh_done(self):
-        self.btn_reload.configure(state="normal", text="Zaktualizuj widok")
+        self.btn_reload.configure(state="normal", text="Pobierz nowe opinie")
         self.load_data()
 
     def _render_tree(self, df):

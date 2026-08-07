@@ -50,7 +50,7 @@ class App(ctk.CTk):
         self.show_view("main")
         
         # Uruchom automatyczne odpytywanie Google API co 5 minut (300 000 ms)
-        self.after(300000, self._auto_fetch_loop)
+        # self.after(300000, self._auto_fetch_loop) # Wyłączone by uniknąć bana od Google za spamowanie zapytań
         
         # Sprawdzenie aktualizacji 2 sekundy po uruchomieniu
         self.after(2000, self._check_updates_startup)

@@ -226,7 +226,7 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
         config = config_manager.load_config()
 
     if not tekst or not str(tekst).strip():
-        return "Ogólne"
+        return "BEZ WSKAZANIA DZIAŁU"
 
     # Przygotowanie wszystkich dostępnych kategorii z ustawień
     pracownicy_config = config.get("PRACOWNICY", {})
@@ -257,7 +257,7 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
     wszystkie_kategorie = list(set(pracownicy + dzialy))
 
     if not wszystkie_kategorie:
-        return "Ogólne"
+        return "BEZ WSKAZANIA DZIAŁU"
 
     tekst_lower = str(tekst).lower()
 
@@ -303,8 +303,8 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
     # --- KROK 3: SZTUCZNA INTELIGENCJA AI (mDeBERTa-v3 dla nietypowych opinii) ---
     use_ai = config.get("USE_AI_MODEL", True)
     if not use_ai:
-        _log_review_classification("[Konfiguracja] Model AI wyłączony w ustawieniach. Zwracam 'Ogólne'.")
-        return "Ogólne"
+        _log_review_classification("[Konfiguracja] Model AI wyłączony w ustawieniach. Zwracam 'BEZ WSKAZANIA DZIAŁU'.")
+        return "BEZ WSKAZANIA DZIAŁU"
 
     classifier = get_review_model()
     if classifier is not None:
@@ -341,10 +341,10 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
             pewnosc = result["scores"][0]
 
             if najlepsza_kategoria_low == neutral_label:
-                _log_review_classification(f"[Zero-Shot AI] Wykryto brak konkretnego działu ({neutral_label}). Zwracam 'Ogólne'.")
-                return "Ogólne"
+                _log_review_classification(f"[Zero-Shot AI] Wykryto brak konkretnego działu ({neutral_label}). Zwracam 'BEZ WSKAZANIA DZIAŁU'.")
+                return "BEZ WSKAZANIA DZIAŁU"
 
-            najlepsza_kategoria = label_to_kategoria.get(najlepsza_kategoria_low, "Ogólne")
+            najlepsza_kategoria = label_to_kategoria.get(najlepsza_kategoria_low, "BEZ WSKAZANIA DZIAŁU")
             najlepsza_low = najlepsza_kategoria.lower()
 
             if "samochody używane" in najlepsza_low or "używane" in najlepsza_low:
@@ -353,18 +353,18 @@ def przypisz_kategorie(tekst, location_id=None, config=None):
                 has_uzywane = any(w in slowa_t for w in ["uzywan", "uzywka", "komis", "odkup", "trade", "bezwypadkow", "przebieg"])
                 if not (has_auto and has_uzywane):
                     _log_review_classification(f"[Zero-Shot AI] Odrzucono '{najlepsza_kategoria}' - brak wymaganych obu członów (samochód + używany).")
-                    return "Ogólne"
+                    return "BEZ WSKAZANIA DZIAŁU"
 
             # Obniżony próg dla wzbogaconego kontekstowo promptu
             if pewnosc >= 0.70:
                 _log_review_classification(f"[Zero-Shot AI mDeBERTa] AI dopasowało '{najlepsza_kategoria}' na podstawie kontekstu opinii (pewność: {pewnosc:.2f})")
                 return najlepsza_kategoria
             else:
-                _log_review_classification(f"[Zero-Shot AI mDeBERTa] Odrzucono '{najlepsza_kategoria}' (pewność {pewnosc:.2f} < 0.70). Zwracam 'Ogólne'.")
+                _log_review_classification(f"[Zero-Shot AI mDeBERTa] Odrzucono '{najlepsza_kategoria}' (pewność {pewnosc:.2f} < 0.70). Zwracam 'BEZ WSKAZANIA DZIAŁU'.")
         except Exception as e:
-            logger.exception("Błąd podczas klasyfikacji modelem AI. Zwracam 'Ogólne'.")
+            logger.exception("Błąd podczas klasyfikacji modelem AI. Zwracam 'BEZ WSKAZANIA DZIAŁU'.")
             
-    return "Ogólne"
+    return "BEZ WSKAZANIA DZIAŁU"
 
 
 
@@ -717,71 +717,42 @@ def pobierz_szczegoly_lokalizacji() -> list:
     if not lokalizacje:
         return szczegoly
 
-    try:
-        headers = _get_auth_headers()
-    except Exception as e:
-        logger.error(f"Błąd autoryzacji przy pobieraniu szczegółów: {e}")
-        # Fallback — zwróć dane z konfiguracji bez danych z API
-        for location_name, nazwa_lokalizacji in lokalizacje.items():
-            szczegoly.append({
-                "place_id": location_name,
-                "custom_name": nazwa_lokalizacji,
-                "display_name": nazwa_lokalizacji,
-                "rating": "Brak autoryzacji",
-                "userRatingCount": "-"
-            })
-        return szczegoly
-
+    # Aby zminimalizować zużycie API (oraz uniknąć błędów 429), nie robimy zapytania o każdą lokalizację do Google.
+    # Wczytamy dane bazując wyłącznie na wpisach z konfiguracji oraz wypełnimy je z lokalnej bazy CSV.
     for location_name, nazwa_lokalizacji in lokalizacje.items():
-        # The v1 Business Information API expects "locations/{locationId}".
-        # If config contains the full v4 path "accounts/{accountId}/locations/{locationId}",
-        # we strip out the account prefix to avoid 404.
-        clean_location_name = location_name
-        if "locations/" in location_name:
-            idx = location_name.find("locations/")
-            clean_location_name = location_name[idx:]
-            
-        url = f"{GBP_BUSINESS_INFO_URL}/{clean_location_name}"
-        params = {"readMask": "name,title,metadata"}
+        szczegoly.append({
+            "place_id": location_name,
+            "custom_name": nazwa_lokalizacji,
+            "display_name": nazwa_lokalizacji,
+            "rating": "—",
+            "userRatingCount": "—"
+        })
 
-        try:
-            response = requests.get(url, headers=headers, params=params)
-            _log_http_call("GET", url, headers, params=params, response=response)
-            if response.status_code == 200:
-                data = response.json()
-                display_name = data.get("title", nazwa_lokalizacji)
-                metadata = data.get("metadata", {})
-                # Ocena i liczba recenzji są w metadata dla nowszego API
-                # Fallback na mapsUri jeśli brak bezpośrednich pól
-                rating = metadata.get("averageRating", data.get("averageRating", "—"))
-                count = metadata.get("totalReviewCount", data.get("totalReviewCount", "—"))
-
-                szczegoly.append({
-                    "place_id": location_name,
-                    "custom_name": nazwa_lokalizacji,
-                    "display_name": display_name,
-                    "rating": rating,
-                    "userRatingCount": count
-                })
-            else:
-                logger.error(f"Błąd API szczegóły dla '{nazwa_lokalizacji}': {response.status_code} — {response.text[:200]}")
-                szczegoly.append({
-                    "place_id": location_name,
-                    "custom_name": nazwa_lokalizacji,
-                    "display_name": nazwa_lokalizacji,
-                    "rating": "Błąd API",
-                    "userRatingCount": "-"
-                })
-        except Exception as e:
-            logger.exception(f"Błąd techniczny przy '{nazwa_lokalizacji}'")
-            szczegoly.append({
-                "place_id": location_name,
-                "custom_name": nazwa_lokalizacji,
-                "display_name": nazwa_lokalizacji,
-                "rating": "Błąd",
-                "userRatingCount": "-"
-            })
-
+    # Uzupełnij oceny z lokalnej bazy, jeśli Google API nie zwróciło danych lub zwróciło błąd
+    istniejace = wczytaj_istniejace_opinie(config.get("CSV_DATABASE", "database_opinie.csv"))
+    if istniejace:
+        lokalne_statystyki = {}
+        for r in istniejace.values():
+            lok = r.get("Lokalizacja")
+            try:
+                rating = float(r.get("Ocena", 0))
+            except ValueError:
+                rating = 0
+            if lok:
+                if lok not in lokalne_statystyki:
+                    lokalne_statystyki[lok] = {"sum": 0, "count": 0}
+                if rating > 0:
+                    lokalne_statystyki[lok]["sum"] += rating
+                    lokalne_statystyki[lok]["count"] += 1
+                    
+        for loc in szczegoly:
+            display = loc.get("display_name") or loc.get("custom_name")
+            if loc.get("rating") == "—" or loc.get("userRatingCount") == "—" or loc.get("rating") == "Brak autoryzacji":
+                if display in lokalne_statystyki and lokalne_statystyki[display]["count"] > 0:
+                    avg_rating = round(lokalne_statystyki[display]["sum"] / lokalne_statystyki[display]["count"], 1)
+                    loc["rating"] = avg_rating
+                    loc["userRatingCount"] = lokalne_statystyki[display]["count"]
+    
     return szczegoly
 
 
@@ -805,7 +776,7 @@ def reklasyfikuj_baze_csv() -> int:
     display_to_id = {v: k for k, v in lokalizacje.items()}
 
     for review_id, row in istniejace.items():
-        stara_kat = row.get("Kategoria", "Ogólne")
+        stara_kat = row.get("Kategoria", "BEZ WSKAZANIA DZIAŁU")
         loc_display = row.get("Lokalizacja", "")
         location_id = display_to_id.get(loc_display)
         nowa_kat = przypisz_kategorie(row.get("Tresc", ""), location_id, config)

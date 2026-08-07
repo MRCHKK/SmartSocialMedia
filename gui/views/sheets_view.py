@@ -285,7 +285,14 @@ class SheetsView(ctk.CTkFrame):
                 font=("Arial", 12),
                 fg_color="#555555", hover_color="#757575",
                 command=lambda path=f: self._open_folder(path)
-            ).pack(side="left", expand=True, padx=(4, 0))
+            ).pack(side="left", expand=True, padx=(4, 4))
+            
+            ctk.CTkButton(
+                btn_box, text="Usuń", width=80, height=26, corner_radius=4,
+                font=("Arial", 12), text_color="white",
+                fg_color="#8b0000", hover_color="#5c0000",
+                command=lambda path=f: self._delete_file(path)
+            ).pack(side="left", expand=True, padx=(0, 0))
 
     def _open_file(self, filepath):
         try:
@@ -309,3 +316,19 @@ class SheetsView(ctk.CTkFrame):
                 subprocess.call(["xdg-open", os.path.dirname(abs_path)])
         except Exception as e:
             self._log(f"[Błąd] Nie udało się otworzyć folderu: {e}")
+
+    def _delete_file(self, filepath):
+        from tkinter import messagebox
+        filename = os.path.basename(filepath)
+        confirm = messagebox.askyesno(
+            "Usuwanie pliku",
+            f"Czy na pewno chcesz usunąć plik:\n{filename}?",
+            parent=self.app_root
+        )
+        if confirm:
+            try:
+                os.remove(filepath)
+                self._log(f"🗑️ Usunięto plik: {filename}")
+                self.refresh_files()
+            except Exception as e:
+                self._log(f"❌ [Błąd] Nie udało się usunąć pliku: {e}")

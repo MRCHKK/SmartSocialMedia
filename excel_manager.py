@@ -128,8 +128,8 @@ def _buduj_dane_lokalizacji(df_lok, dzialy_kolejnosc, aktywne_kategorie, emp_dep
     if not df_lok.empty:
         # Zamień imiona pracowników na przypisany im dział
         df_lok["Kategoria"] = df_lok["Kategoria"].map(lambda k: emp_dept_map.get(k, k))
-        # Zamień nieaktywne lub niezmapowane kategorie na "Ogólne"
-        df_lok.loc[~df_lok["Kategoria"].isin(aktywne_kategorie), "Kategoria"] = "Ogólne"
+        # Zamień nieaktywne lub niezmapowane kategorie na "BEZ WSKAZANIA DZIAŁU"
+        df_lok.loc[~df_lok["Kategoria"].isin(aktywne_kategorie), "Kategoria"] = "BEZ WSKAZANIA DZIAŁU"
 
     gwiazdy_suma = _licz_gwiazdy(df_lok)
 
@@ -375,7 +375,7 @@ def generuj_zestawienie(date_range=None, wizytowki_dane=None):
     dzialy_kolejnosc = list(dzialy_config.keys()) if isinstance(dzialy_config, dict) else list(dzialy_config)
 
     # Aktywne kategorie (by nie wyświetlać nieaktywnych działów w osobnym wierszu)
-    aktywne_kategorie = set(dzialy_kolejnosc + ["Ogólne"])
+    aktywne_kategorie = set(dzialy_kolejnosc + ["BEZ WSKAZANIA DZIAŁU"])
 
     wizytowki_dane = wizytowki_dane or {}
 
